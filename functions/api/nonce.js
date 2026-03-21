@@ -9,7 +9,9 @@ export async function onRequestGet(context) {
   const nonce = makeNonce(24);
   const ttlSeconds = 10 * 60;
 
-  await NONCES.put(`nonce:${nonce}`, "1", { expirationTtl: ttlSeconds });
+  await NONCES.put(`nonce:${nonce}`, "1", {
+    expirationTtl: ttlSeconds,
+  });
 
   return json({ ok: true, nonce, ttlSeconds });
 }
@@ -36,3 +38,4 @@ function json(data, status = 200) {
     },
   });
 }
+
