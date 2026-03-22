@@ -6,7 +6,7 @@ export async function onRequestGet(context) {
     return json({ ok: false, error: "KV binding missing: SIWE_NONCES" }, 500);
   }
 
-  // ✅ nonce SIWE: alfanumérico y >= 8 chars
+  // ✅ SOLO alfanumérico (A-Z a-z 0-9) y >= 8 chars
   const nonce = makeAlphanumericNonce(24);
 
   const ttlSeconds = 10 * 60;
@@ -15,16 +15,13 @@ export async function onRequestGet(context) {
   return json({ ok: true, nonce, ttlSeconds });
 }
 
-// ✅ SOLO A-Z a-z 0-9
 function makeAlphanumericNonce(length = 24) {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const bytes = new Uint8Array(length);
   crypto.getRandomValues(bytes);
 
   let out = "";
-  for (let i = 0; i < length; i++) {
-    out += chars[bytes[i] % chars.length];
-  }
+  for (let i = 0; i < length; i++) out += chars[bytes[i] % chars.length];
   return out;
 }
 
@@ -37,5 +34,6 @@ function json(data, status = 200) {
     },
   });
 }
+
 
 
