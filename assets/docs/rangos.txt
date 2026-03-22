@@ -1,0 +1,169 @@
+SISTEMA DHARMA, ECONOMÍA DE TOKENS
+Y RECOMPENSAS MULTIFUNCIONALES
+1.	PROPÓSITO DEL SISTEMA
+Este documento define el estándar completo del sistema económico y reputacional del ecosistema alemty.eth, incluyendo:
+– Dharma (experiencia / progreso)
+– Token ERC de utilidad (transferible)
+– Relación entre ambos sistemas
+– NFTs de rango y su ciclo de vida
+– Moderación y roles operativos
+– Pools internos y recompensas comunitarias
+El objetivo es permitir una economía viva y flexible sin romper el principio fundamental del proyecto:
+El dinero nunca debe sustituir al mérito.
+________________________________________
+2.	IDENTIDAD Y BASE DEL SISTEMA
+Toda interacción dentro del ecosistema se vincula a una identidad descentralizada verificada mediante wallet (SIWE).
+Cada identidad tiene dos contadores separados:
+1.	Dharma (XP / experiencia reputacional)
+2.	Token ERC (saldo económico transferible)
+Estos contadores no son equivalentes ni intercambiables de forma directa.
+________________________________________
+3.	DHARMA (XP) — EXPERIENCIA Y PROGRESO
+3.1 Definición
+Dharma es la métrica de experiencia social del ecosistema.
+Representa: – trayectoria – constancia – calidad de participación – confianza comunitaria
+Dharma funciona como una barra de experiencia, similar a un sistema de niveles en un videojuego.
+________________________________________
+3.2 Naturaleza de Dharma
+Dharma: – NO es un token ERC
+– NO es transferible
+– NO es comprable
+– NO se puede vender
+– NO se puede regalar
+Dharma solo puede ganarse mediante participación real.
+________________________________________
+3.3 Visualización
+En el perfil del usuario se muestran dos elementos distintos:
+– Barra de Dharma (XP)
+– Saldo de Token ERC (económico)
+Esto deja claro que: – progreso ≠ dinero
+– reputación ≠ capital
+________________________________________
+4.	TOKEN ERC — UTILIDAD ECONÓMICA
+4.1 Definición
+El Token ERC es el token de utilidad del ecosistema.
+Se utiliza para: – acceso a funciones – consumo de servicios – gobernanza (cuando aplique) – recompensas económicas – intercambio de valor
+________________________________________
+4.2 Compra y mercado
+El Token ERC: – puede comprarse en DEX o CEX (si el proyecto se lista) – puede transferirse libremente – puede enviarse a la DAO – puede usarse como incentivo económico
+IMPORTANTE: Los tokens comprados NO incrementan Dharma
+Los tokens comprados NO suben nivel
+Esto garantiza que no exista “pay to level”.
+________________________________________
+5.	CONVERSIÓN ENTRE TOKEN ERC Y RECOMPENSAS COMUNITARIAS
+5.1 Pool interno de conversión
+La DAO mantiene un pool interno que permite:
+– Convertir Token ERC en “puntos de recompensa” – Asignar esos puntos a otros usuarios como propinas o premios
+Este proceso es unidireccional:
+Token ERC → Pool → Recompensa comunitaria
+Nunca: Recompensa → Dharma
+Token comprado → Dharma
+________________________________________
+5.2 Uso típico (ejemplo)
+Un usuario: – compra Token ERC en un DEX – envía esos tokens al pool comunitario – asigna recompensas económicas a autores de posts valiosos
+Resultado: – el autor recibe tokens (valor económico) – el autor NO recibe Dharma por ese pago – su rango no cambia por dinero
+La reputación sigue siendo independiente.
+________________________________________
+6.	DHARMA Y RANGOS REPUTACIONALES
+6.1 Rangos oficiales
+Los rangos representan estatus social y trayectoria histórica.
+Novato
+Iniciado
+Plata
+Oro
+Diamante
+Avanzado
+Refinado
+Único
+Elite
+Superior
+Amasterdamo
+________________________________________
+6.2 Umbrales de Dharma
+(Valores sostenibles y deliberadamente difíciles en niveles altos)
+Novato: 0
+Iniciado: 100
+Plata: 500
+Oro: 1,500
+Diamante: 5,000
+Avanzado: 12,000
+Refinado: 30,000
+Único: 75,000
+Elite: 150,000
+Superior: 300,000
+Amasterdamo: 600,000 o más
+Amasterdamo es un rango legendario, no funcional.
+________________________________________
+7.	NFTs DE RANGO (MEDALLAS)
+7.1 Naturaleza
+Cada rango está representado por un NFT de medalla.
+Estos NFTs: – son reputacionales – no otorgan poder – no prometen retorno económico
+________________________________________
+7.2 Minteo automático
+Cuando el Dharma cruza un umbral: – el sistema mintea automáticamente el NFT del rango – se muestra como medalla tipo POAP – queda registrado como historial
+________________________________________
+7.3 Subasta o custodia (cuando el usuario abandona)
+Si un usuario decide abandonar el proyecto, puede elegir:
+A) Subastar su NFT de rango
+– La subasta transfiere solo la medalla
+– NO transfiere Dharma
+– NO transfiere experiencia
+– Es un objeto simbólico/reputacional
+B) Custodia como recuerdo
+– El NFT queda bloqueado por la DAO
+– Se conserva como registro histórico
+Esto permite cierre digno sin romper la integridad del sistema.
+________________________________________
+8.	MODERACIÓN (MODELO STREAMING)
+8.1 Separación absoluta
+Los rangos y Dharma: – NO habilitan moderación
+La moderación se gestiona mediante NFTs de rol separados.
+________________________________________
+8.2 NFTs de moderación
+Ejemplos: – Moderador
+– Moderador senior
+– GM / Administrador
+Estos NFTs: – se otorgan manualmente o por gobernanza – pueden revocarse – tienen permisos limitados y auditables
+________________________________________
+8.3 Amasterdamo
+El rango Amasterdamo: – NO es moderador – NO tiene autoridad – NO tiene permisos especiales
+Es reconocimiento puro.
+________________________________________
+9.	POOLS INTERNOS Y RECOMPENSAS MULTIFUNCIONALES
+El ecosistema opera con pools funcionales separados:
+– Pool Dharma (XP, reputación) – Pool Token Utility (económico) – Pool DAO (tesorería, grants, moderación) – Pool Eventos (POAPs, activaciones) – Pool Recompensas (propinas, premios)
+Este diseño evita que un solo token controle todo.
+________________________________________
+10.	ROL DEL BACKEND
+El backend: – valida identidad – calcula Dharma – aplica límites antifarming – gestiona pools – ejecuta minteos – registra eventos auditables
+El backend aplica reglas objetivas, no opiniones.
+________________________________________
+11.	ROADMAP Y ACTIVACIÓN ECONÓMICA
+Fase 0–2
+– Dharma activo como reputación
+– Token ERC no central
+Fase 3–4
+– Activación plena del Token ERC
+– Pool de recompensas comunitarias
+Fase 5+
+– Gobernanza DAO
+– Uso avanzado de pools
+– IA y producto AR
+El supply máximo es un límite, no una meta.
+________________________________________
+12.	PRINCIPIO FINAL
+El ecosistema se rige por esta regla:
+La reputación se gana.
+El dinero se usa.
+El poder se gobierna.
+Ninguna de las tres cosas debe sustituir a las otras.
+________________________________________
+13.	CIERRE
+Este diseño permite:
+– economía real sin especulación destructiva
+– incentivos económicos sin corrupción reputacional
+– reconocimiento social legítimo
+– salida digna de participantes
+– sostenibilidad a largo plazo
+No es un sistema simple.
+Pero es un sistema justo.
