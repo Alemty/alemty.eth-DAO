@@ -42,7 +42,7 @@ No existe aún un producto comercial final, y esto es intencional.
 
 ---
 
-## Arquitectura general.
+## Arquitectura general
 
 alemty.eth se estructura en capas independientes:
 
