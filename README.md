@@ -16,7 +16,7 @@ Es una **estructura organizativa digital** diseñada para crecer de manera orden
 
 ---
 
-## Objetivo del proyecto
+## Intención inicial del proyecto
 
 El objetivo de alemty.eth es construir una base tecnológica y social que permita:
 
