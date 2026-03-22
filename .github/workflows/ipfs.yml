@@ -3,105 +3,80 @@ name: Deploy site to IPFS (Pinata)
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      # 1) Empaqueta SOLO lo que debe ir a IPFS (tu sitio)
-      #    Ajusta la lista si agregas más archivos en raíz.
+      # 1) Prepara SOLO el sitio (evita .git/.github)
       - name: Prepare site folder
         run: |
           set -euo pipefail
           rm -rf ipfs
           mkdir -p ipfs
 
-          # Core
+          # Archivos raíz del sitio
           cp index.html style.css app.js ipfs/
 
-          # Assets
+          # Carpeta assets (si existe)
           if [ -d assets ]; then cp -R assets ipfs/; fi
 
-          # Extras opcionales (si existen)
+          # Extras opcionales en raíz (si existen)
           cp *.jpg ipfs/ 2>/dev/null || true
           cp *.jpeg ipfs/ 2>/dev/null || true
           cp *.png ipfs/ 2>/dev/null || true
           cp *.pdf ipfs/ 2>/dev/null || true
 
-          echo "Prepared folder tree:"
-          find ipfs -maxdepth 3 -type f | sed 's|^| - |'
+          echo "Prepared files:"
+          find ipfs -type f | sed 's|^| - |'
 
-      # 2) Sube la carpeta como un "directory pin"
-      #    - cidVersion 1 -> CIDs bafy... (recomendado)
-      #    - name -> se ve bonito en Pinata
-      - name: Upload directory to Pinata (pinFileToIPFS)
+      # 2) Upload a Pinata como carpeta: MULTIPLES -F file=@... (uno por archivo)
+      - name: Upload folder to Pinata
         env:
           PINATA_API_KEY: ${{ secrets.PINATA_API_KEY }}
           PINATA_SECRET_API_KEY: ${{ secrets.PINATA_SECRET_API_KEY }}
         run: |
           set -euo pipefail
 
-          # Construye multipart agregando cada archivo con su filepath relativo
-          # (Esto es lo que Pinata recomienda para carpetas: múltiples "file" con filepath) [1](https://docs.pinata.cloud/api-reference/endpoint/ipfs/pin-file-to-ipfs)
-          boundary="----ipfs-pinata-$(date +%s)"
-          tmp_body="$(mktemp)"
+          # Construye un comando curl con MUCHOS -F (uno por archivo).
+          # Esto es lo más compatible con “folder upload” en pinFileToIPFS. [1](https://docs.pinata.cloud/api-reference/endpoint/ipfs/pin-file-to-ipfs)
+          cmd=(curl -sS -X POST "https://api.pinata.cloud/pinning/pinFileToIPFS"
+            -H "pinata_api_key: ${PINATA_API_KEY}"
+            -H "pinata_secret_api_key: ${PINATA_SECRET_API_KEY}"
+          )
 
-          add_file () {
-            local f="$1"
-            local rel="${f#ipfs/}"
-            printf -- "--%s\r\n" "$boundary" >> "$tmp_body"
-            printf 'Content-Disposition: form-data; name="file"; filename="%s"\r\n' "$rel" >> "$tmp_body"
-            printf "Content-Type: application/octet-stream\r\n\r\n" >> "$tmp_body"
-            cat "$f" >> "$tmp_body"
-            printf "\r\n" >> "$tmp_body"
-          }
-
-          while IFS= read -r -d '' file; do
-            add_file "$file"
+          # Adjunta cada archivo con filename relativo (mantiene estructura)
+          while IFS= read -r -d '' f; do
+            rel="${f#ipfs/}"
+            cmd+=( -F "file=@${f};filename=${rel}" )
           done < <(find ipfs -type f -print0)
 
-          # Metadata + Options (cidVersion=1)
-          printf -- "--%s\r\n" "$boundary" >> "$tmp_body"
-          printf 'Content-Disposition: form-data; name="pinataMetadata"\r\n\r\n' >> "$tmp_body"
-          printf '{"name":"alemty.eth-site"}\r\n' >> "$tmp_body"
-
-          printf -- "--%s\r\n" "$boundary" >> "$tmp_body"
-          printf 'Content-Disposition: form-data; name="pinataOptions"\r\n\r\n' >> "$tmp_body"
-          printf '{"cidVersion":1}\r\n' >> "$tmp_body"
-
-          printf -- "--%s--\r\n" "$boundary" >> "$tmp_body"
+          # Metadata + Options (CIDv1 = bafy...)
+          cmd+=( -F 'pinataMetadata={"name":"alemty.eth-site"}' )
+          cmd+=( -F 'pinataOptions={"cidVersion":1}' )
 
           echo "Uploading to Pinata..."
-          resp="$(curl -sS -X POST "https://api.pinata.cloud/pinning/pinFileToIPFS" \
-            -H "pinata_api_key: ${PINATA_API_KEY}" \
-            -H "pinata_secret_api_key: ${PINATA_SECRET_API_KEY}" \
-            -H "Content-Type: multipart/form-data; boundary=${boundary}" \
-            --data-binary @"$tmp_body")"
-
+          resp="$("${cmd[@]}")"
           echo "Pinata response: $resp"
 
-          # Extrae IpfsHash sin depender de jq
           cid="$(echo "$resp" | sed -n 's/.*"IpfsHash"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p')"
-
           if [ -z "$cid" ]; then
-            echo "❌ No se encontró IpfsHash en la respuesta. Revisa credenciales/permisos."
+            echo "❌ No se encontró IpfsHash. Respuesta completa arriba."
             exit 1
           fi
 
           echo "✅ CID: $cid"
           echo "$cid" > ipfs-cid.txt
 
-      # 3) Guarda el CID como artifact (historial por cada run)
       - name: Upload CID artifact
         uses: actions/upload-artifact@v4
         with:
           name: ipfs-cid
           path: ipfs-cid.txt
+
 
 
