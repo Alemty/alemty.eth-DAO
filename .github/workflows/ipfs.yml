@@ -13,19 +13,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Empaqueta SOLO el sitio (no .git, no .github)
       - name: Prepare site folder
         run: |
           set -euo pipefail
           rm -rf ipfs
           mkdir -p ipfs
 
-          # Core
           cp index.html style.css app.js ipfs/
-
-          # Assets
           if [ -d assets ]; then cp -R assets ipfs/; fi
 
-          # Extras (si existen)
           cp *.jpg ipfs/ 2>/dev/null || true
           cp *.jpeg ipfs/ 2>/dev/null || true
           cp *.png ipfs/ 2>/dev/null || true
@@ -34,43 +31,71 @@ jobs:
           echo "Prepared files:"
           find ipfs -type f | sed 's|^| - |'
 
-      - name: Upload folder to Pinata (with filepath)
+      # Folder upload “correcto” (con filepath) según patrón de la doc 
+      - name: Upload folder to Pinata (Node folder mode)
         env:
-          PINATA_API_KEY: ${{ secrets.PINATA_API_KEY }}
-          PINATA_SECRET_API_KEY: ${{ secrets.PINATA_SECRET_API_KEY }}
+          PINATA_JWT: ${{ secrets.PINATA_JWT }}
         run: |
           set -euo pipefail
 
-          cmd=(curl -sS -X POST "https://api.pinata.cloud/pinning/pinFileToIPFS"
-            -H "pinata_api_key: ${PINATA_API_KEY}"
-            -H "pinata_secret_api_key: ${PINATA_SECRET_API_KEY}"
-          )
+          # dependencias para armar FormData con filepath (misma idea del ejemplo de Pinata) 
+          npm init -y >/dev/null 2>&1
+          npm i form-data recursive-fs base-path-converter got@14 >/dev/null 2>&1
 
-          # ✅ CLAVE: agregar `filepath` por cada archivo (esto habilita folder upload) 
-          while IFS= read -r -d '' f; do
-            rel="${f#ipfs/}"
-            cmd+=( -F "file=@${f};filename=${rel};filepath=${rel}" )
-          done < <(find ipfs -type f -print0)
+          node <<'NODE'
+          import fs from "fs";
+          import FormData from "form-data";
+          import rfs from "recursive-fs";
+          import basePathConverter from "base-path-converter";
+          import got from "got";
 
-          # Metadata + Options (CIDv1 bafy...)
-          cmd+=( -F 'pinataMetadata={"name":"alemty.eth-site"}' )
-          cmd+=( -F 'pinataOptions={"cidVersion":1}' )
+          const url = "https://api.pinata.cloud/pinning/pinFileToIPFS";
+          const src = "ipfs";
+          const jwt = process.env.PINATA_JWT;
 
-          echo "Uploading to Pinata..."
-          resp="$("${cmd[@]}")"
-          echo "Pinata response: $resp"
+          if (!jwt) {
+            console.error("❌ Falta PINATA_JWT en Secrets de GitHub.");
+            process.exit(1);
+          }
 
-          cid="$(echo "$resp" | sed -n 's/.*"IpfsHash"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p')"
-          if [ -z "$cid" ]; then
-            echo "❌ No se encontró IpfsHash. Respuesta completa arriba."
-            exit 1
-          fi
+          const { files } = await rfs.read(src);
 
-          echo "✅ CID: $cid"
-          echo "$cid" > ipfs-cid.txt
+          if (!files?.length) {
+            console.error("❌ La carpeta ipfs está vacía, no hay nada que subir.");
+            process.exit(1);
+          }
+
+          const data = new FormData();
+
+          for (const file of files) {
+            data.append("file", fs.createReadStream(file), {
+              filepath: basePathConverter(src, file), // ✅ CLAVE: filepath para folder upload 
+            });
+          }
+
+          data.append("pinataMetadata", JSON.stringify({ name: "alemty.eth-site" }));
+          data.append("pinataOptions", JSON.stringify({ cidVersion: 1 }));
+
+          const resp = await got(url, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${jwt}` },
+            body: data,
+          }).json();
+
+          console.log("✅ Pinata response:", resp);
+
+          if (!resp.IpfsHash) {
+            console.error("❌ No llegó IpfsHash en la respuesta.");
+            process.exit(1);
+          }
+
+          fs.writeFileSync("ipfs-cid.txt", resp.IpfsHash, "utf8");
+          console.log("✅ CID:", resp.IpfsHash);
+          NODE
 
       - name: Upload CID artifact
         uses: actions/upload-artifact@v4
         with:
           name: ipfs-cid
           path: ipfs-cid.txt
+
