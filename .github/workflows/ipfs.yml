@@ -13,16 +13,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Empaqueta SOLO el sitio (no .git, no .github)
+      # 1) Prepara SOLO el sitio (evita .git/.github)
       - name: Prepare site folder
         run: |
           set -euo pipefail
           rm -rf ipfs
           mkdir -p ipfs
 
+          # Core
           cp index.html style.css app.js ipfs/
+
+          # Assets
           if [ -d assets ]; then cp -R assets ipfs/; fi
 
+          # Extras opcionales (si existen)
           cp *.jpg ipfs/ 2>/dev/null || true
           cp *.jpeg ipfs/ 2>/dev/null || true
           cp *.png ipfs/ 2>/dev/null || true
@@ -31,14 +35,14 @@ jobs:
           echo "Prepared files:"
           find ipfs -type f | sed 's|^| - |'
 
-      # Folder upload “correcto” (con filepath) según patrón de la doc 
-      - name: Upload folder to Pinata (Node folder mode)
+      # 2) Folder upload correcto (con filepath) + nombre versionado automático
+      - name: Upload folder to Pinata (versioned)
         env:
           PINATA_JWT: ${{ secrets.PINATA_JWT }}
         run: |
           set -euo pipefail
 
-          # dependencias para armar FormData con filepath (misma idea del ejemplo de Pinata) 
+          # Dependencias para armar FormData con filepath (patrón de folders de Pinata) 
           npm init -y >/dev/null 2>&1
           npm i form-data recursive-fs base-path-converter got@14 >/dev/null 2>&1
 
@@ -54,12 +58,30 @@ jobs:
           const jwt = process.env.PINATA_JWT;
 
           if (!jwt) {
-            console.error("❌ Falta PINATA_JWT en Secrets de GitHub.");
+            console.error("❌ Falta PINATA_JWT en GitHub Secrets.");
             process.exit(1);
           }
 
-          const { files } = await rfs.read(src);
+          // ---- 1) Detecta version automáticamente desde index.html ----
+          // Busca: v0.06 (o cualquier vX.Y/Z) dentro del HTML
+          let version = "v0.00";
+          try {
+            const html = fs.readFileSync("index.html", "utf8");
+            const m = html.match(/\bv\d+(?:\.\d+)+\b/); // v0.06, v1.2.3, etc.
+            if (m?.[0]) version = m[0];
+          } catch {}
 
+          // ---- 2) Datos de GitHub para versionado legible ----
+          const sha = (process.env.GITHUB_SHA || "nosha").slice(0, 8);
+          const run = process.env.GITHUB_RUN_NUMBER || "0";
+          const repo = process.env.GITHUB_REPOSITORY || "repo";
+          const date = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+
+          // Nombre final visible en Pinata (único y claro)
+          const name = `alemty.eth-${version}-${date}-${sha}-run${run}`;
+
+          // ---- 3) Lee archivos recursivo (folder upload) ----
+          const { files } = await rfs.read(src);
           if (!files?.length) {
             console.error("❌ La carpeta ipfs está vacía, no hay nada que subir.");
             process.exit(1);
@@ -67,15 +89,23 @@ jobs:
 
           const data = new FormData();
 
+          // ✅ CLAVE: filepath por archivo para reconstruir carpeta en Pinata 
           for (const file of files) {
             data.append("file", fs.createReadStream(file), {
-              filepath: basePathConverter(src, file), // ✅ CLAVE: filepath para folder upload 
+              filepath: basePathConverter(src, file),
             });
           }
 
-          data.append("pinataMetadata", JSON.stringify({ name: "alemty.eth-site" }));
+          // Metadata + keyvalues (buscable en Pinata)
+          data.append("pinataMetadata", JSON.stringify({
+            name,
+            keyvalues: { repo, version, sha, run, date }
+          }));
+
+          // CIDv1 (bafy...) recomendado en Pinata options 
           data.append("pinataOptions", JSON.stringify({ cidVersion: 1 }));
 
+          // Auth Bearer token como en la doc de Pinata 
           const resp = await got(url, {
             method: "POST",
             headers: { Authorization: `Bearer ${jwt}` },
@@ -89,13 +119,21 @@ jobs:
             process.exit(1);
           }
 
+          // Guarda outputs
           fs.writeFileSync("ipfs-cid.txt", resp.IpfsHash, "utf8");
-          console.log("✅ CID:", resp.IpfsHash);
+          fs.writeFileSync("ipfs-name.txt", name, "utf8");
+
+          console.log("✅ Name:", name);
+          console.log("✅ CID :", resp.IpfsHash);
           NODE
 
-      - name: Upload CID artifact
+      # 4) Guarda CID + Nombre como artifacts
+      - name: Upload CID + Name artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ipfs-cid
-          path: ipfs-cid.txt
+          name: ipfs-deploy
+          path: |
+            ipfs-cid.txt
+            ipfs-name.txt
+
 
