@@ -8,24 +8,24 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 1) Prepara SOLO el sitio (evita .git/.github)
       - name: Prepare site folder
         run: |
           set -euo pipefail
           rm -rf ipfs
           mkdir -p ipfs
 
-          # Archivos raíz del sitio
+          # Core
           cp index.html style.css app.js ipfs/
 
-          # Carpeta assets (si existe)
+          # Assets
           if [ -d assets ]; then cp -R assets ipfs/; fi
 
-          # Extras opcionales en raíz (si existen)
+          # Extras (si existen)
           cp *.jpg ipfs/ 2>/dev/null || true
           cp *.jpeg ipfs/ 2>/dev/null || true
           cp *.png ipfs/ 2>/dev/null || true
@@ -34,28 +34,25 @@ jobs:
           echo "Prepared files:"
           find ipfs -type f | sed 's|^| - |'
 
-      # 2) Upload a Pinata como carpeta: MULTIPLES -F file=@... (uno por archivo)
-      - name: Upload folder to Pinata
+      - name: Upload folder to Pinata (with filepath)
         env:
           PINATA_API_KEY: ${{ secrets.PINATA_API_KEY }}
           PINATA_SECRET_API_KEY: ${{ secrets.PINATA_SECRET_API_KEY }}
         run: |
           set -euo pipefail
 
-          # Construye un comando curl con MUCHOS -F (uno por archivo).
-          # Esto es lo más compatible con “folder upload” en pinFileToIPFS. [1](https://docs.pinata.cloud/api-reference/endpoint/ipfs/pin-file-to-ipfs)
           cmd=(curl -sS -X POST "https://api.pinata.cloud/pinning/pinFileToIPFS"
             -H "pinata_api_key: ${PINATA_API_KEY}"
             -H "pinata_secret_api_key: ${PINATA_SECRET_API_KEY}"
           )
 
-          # Adjunta cada archivo con filename relativo (mantiene estructura)
+          # ✅ CLAVE: agregar `filepath` por cada archivo (esto habilita folder upload) 
           while IFS= read -r -d '' f; do
             rel="${f#ipfs/}"
-            cmd+=( -F "file=@${f};filename=${rel}" )
+            cmd+=( -F "file=@${f};filename=${rel};filepath=${rel}" )
           done < <(find ipfs -type f -print0)
 
-          # Metadata + Options (CIDv1 = bafy...)
+          # Metadata + Options (CIDv1 bafy...)
           cmd+=( -F 'pinataMetadata={"name":"alemty.eth-site"}' )
           cmd+=( -F 'pinataOptions={"cidVersion":1}' )
 
@@ -77,6 +74,3 @@ jobs:
         with:
           name: ipfs-cid
           path: ipfs-cid.txt
-
-
-
