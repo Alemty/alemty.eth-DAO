@@ -44,10 +44,197 @@ function shortAddr(a) {
   return a.slice(0, 6) + '…' + a.slice(-4);
 }
 
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, (c) =>
-    ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])
-  );
+
+const RANKS_DHARMA = [
+  { name:'Novato', min:0 },
+  { name:'Iniciado', min:100 },
+  { name:'Plata', min:500 },
+  { name:'Oro', min:1500 },
+  { name:'Diamante', min:5000 },
+  { name:'Avanzado', min:12000 },
+  { name:'Refinado', min:30000 },
+  { name:'Único', min:75000 },
+  { name:'Elite', min:150000 },
+  { name:'Superior', min:300000 },
+  { name:'Amasterdamo', min:600000 },
+]; // [2](https://onedrive.live.com?cid=8C61CF68A019DADE&id=8C61CF68A019DADE!s96c7d221a1d04465879985ff00dac98c)
+
+function rankFromXp(xp){
+  const val = Math.max(0, Number(xp)||0);
+  let current = RANKS_DHARMA[0];
+  for (const r of RANKS_DHARMA) if (val >= r.min) current = r;
+  const idx = RANKS_DHARMA.findIndex(r=>r.name===current.name);
+  const next = (idx>=0 && idx<RANKS_DHARMA.length-1) ? RANKS_DHARMA[idx+1] : null;
+  return { current, next };
+}
+
+function computeUserStats(addr, posts){
+  const a = String(addr||'').toLowerCase();
+  const list = Array.isArray(posts) ? posts : [];
+
+  let postsCount=0, commentsCount=0, likesReceived=0, likesGiven=0;
+
+  // likes given (scan likedBy)
+  for (const p of list){
+    const lb = p?.likedBy || {};
+    if (lb && typeof lb==='object' && lb[a]) likesGiven += 1;
+  }
+
+  for (const p of list){
+    if (!p) continue;
+    if (String(p.addr||'').toLowerCase()===a){
+      postsCount += 1;
+      likesReceived += Number(p.likes||0)||0;
+    }
+    const cs = Array.isArray(p.comments) ? p.comments : [];
+    for (const c of cs){
+      if (String(c?.addr||'').toLowerCase()===a) commentsCount += 1;
+    }
+  }
+
+  // Karma tipo reddit (simple v0): likes recibidos + peso ligero de actividad
+  const karma = Math.max(0, likesReceived + Math.floor(commentsCount*0.5) + postsCount);
+
+  // Dharma XP (reputación) separado (placeholder ajustable)
+  const xp = Math.max(0, postsCount*20 + commentsCount*6 + likesReceived*3 + likesGiven*1);
+
+  const level = Math.max(1, Math.floor(xp/100)+1);
+  const { current, next } = rankFromXp(xp);
+
+  const nextMin = next ? next.min : null;
+  const baseMin = current ? current.min : 0;
+  const span = nextMin ? Math.max(1, nextMin-baseMin) : 1;
+  const within = nextMin ? Math.min(span, Math.max(0, xp-baseMin)) : span;
+  const progress = nextMin ? Math.round((within/span)*100) : 100;
+
+  return { addr, postsCount, commentsCount, likesReceived, likesGiven, karma, xp, level, rank: current.name, nextRank: next?.name, nextRankMin: nextMin, progress };
+}
+
+function openProfileModal(addr){
+  const posts = loadPosts(); // ya existe en tu app.js [3](https://onedrive.live.com?cid=8C61CF68A019DADE&id=8C61CF68A019DADE!s68b02493ee8f46d796f5266f6acec70a)
+  const s = computeUserStats(addr, posts);
+
+  const title = document.getElementById('profileTitle');
+  const body  = document.getElementById('profileBody');
+  if (!title || !body) return;
+
+  title.textContent = 'Perfil DID · ' + shortAddr(addr);
+
+  body.innerHTML = `
+    <div class="profile-head">
+      <div class="rank-badge"><span class="dot"></span> ${escapeHtml(s.rank)} · LVL ${escapeHtml(s.level)}</div>
+      <div class="meta small mono">${escapeHtml(addr)}</div>
+    </div>
+
+    <div class="xpbar">
+      <div class="xpbar-top">
+        <div><strong>Dharma (XP)</strong> <span class="meta small">${escapeHtml(s.xp)} XP</span></div>
+        <div class="meta small">${s.nextRank ? `Siguiente: <strong>${escapeHtml(s.nextRank)}</strong> (${escapeHtml(s.nextRankMin)})` : 'Rango máximo'}</div>
+      </div>
+      <div class="xp-track"><div class="xp-fill" style="width:${s.progress}%"></div></div>
+      <div class="meta small" style="margin-top:8px">Progreso: ${escapeHtml(s.progress)}%</div>
+    </div>
+
+    <div class="profile-grid">
+      <div class="stat"><div class="k">Karma</div><div class="v">${escapeHtml(s.karma)}</div></div>
+      <div class="stat"><div class="k">Likes recibidos</div><div class="v">${escapeHtml(s.likesReceived)}</div></div>
+      <div class="stat"><div class="k">Posts</div><div class="v">${escapeHtml(s.postsCount)}</div></div>
+      <div class="stat"><div class="k">Comentarios</div><div class="v">${escapeHtml(s.commentsCount)}</div></div>
+      <div class="stat"><div class="k">Likes dados</div><div class="v">${escapeHtml(s.likesGiven)}</div></div>
+      <div class="stat"><div class="k">Estado</div><div class="v">Público</div></div>
+    </div>
+  `;
+
+  // abre modal (mismo patrón que topicModal) [2](https://onedrive.live.com?cid=8C61CF68A019DADE&id=8C61CF68A019DADE!s96c7d221a1d04465879985ff00dac98c)[1](https://onedrive.live.com?cid=8C61CF68A019DADE&id=8C61CF68A019DADE!scab846db2d6c4d6da9638b33bd97dfa5)
+  const modal = document.getElementById('profileModal');
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden','false');
+
+  const close = () => { modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); };
+  document.getElementById('profileClose')?.addEventListener('click', close, { once:true });
+  document.getElementById('profileBackdrop')?.addEventListener('click', close, { once:true });
+}
+
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>\"']/g, (c) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[c]));
+}
+
+
+
+
+// v0.06: Acreditaciones en collage (4 destacadas con rotación automática)
+
+function buildCertCollage(list) {
+  const grid = document.getElementById('certGrid');
+  if (!grid) return;
+
+  if (!Array.isArray(list) || list.length === 0) {
+    grid.innerHTML = '<p class="meta">Sin acreditaciones disponibles.</p>';
+    return;
+  }
+
+  const sorted = list.slice().sort((a, b) => {
+    const pA = a.pinned ? 1 : 0;
+    const pB = b.pinned ? 1 : 0;
+    if (pA !== pB) return pB - pA;
+    const s = (b.score ?? 0) - (a.score ?? 0);
+    if (s !== 0) return s;
+    const ay = a.start ?? '';
+    const by = b.start ?? '';
+    if (ay < by) return 1;
+    if (ay > by) return -1;
+    return (a.title ?? '').localeCompare(b.title ?? '');
+  });
+
+  let cursor = 0;
+  const pick4 = () => {
+    const out = [];
+    for (let i = 0; i < 4; i++) out.push(sorted[(cursor + i) % sorted.length]);
+    cursor = (cursor + 1) % sorted.length;
+    return out;
+  };
+
+  const paint = (items) => {
+    grid.innerHTML = '';
+    items.forEach((c) => {
+      const a = document.createElement('a');
+      a.className = 'cert-tile';
+      a.href = c.url || '#';
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+
+      if (!c.url) {
+        a.setAttribute('aria-disabled', 'true');
+        a.style.pointerEvents = 'none';
+        a.style.opacity = '0.75';
+      }
+
+      a.innerHTML = `
+        <div class="cert-title">${escapeHtml(c.title ?? 'Acreditación')}</div>
+        <div class="cert-meta">${escapeHtml(c.issuer ?? '')}${c.start ? ' · ' + escapeHtml(c.start) : ''}</div>
+      `;
+      grid.appendChild(a);
+    });
+  };
+
+  const render = (items) => {
+    grid.classList.add('fade');
+    setTimeout(() => {
+      paint(items);
+      grid.classList.remove('fade');
+    }, 180);
+  };
+
+  render(pick4());
+  window.clearInterval(window.__certRot);
+  window.__certRot = window.setInterval(() => render(pick4()), 4200);
 }
 
 function fmtTime(ts) {
@@ -73,6 +260,95 @@ fetch('assets/data/site.v3.json')
     renderDidCard();
     initForum();
   });
+
+// =====================
+// Modal: Sistema de Rangos (desde .txt local)
+// =====================
+const RANGOS_TXT_URL = 'assets/docs/rangos.txt';
+
+function openRangosModal() {
+  const modal = document.getElementById('rangosModal');
+  const body = document.getElementById('rangosBody');
+  if (!modal || !body) return;
+
+  // UI placeholder mientras carga
+  body.innerHTML = `
+    <article class="post">
+      <header class="post-head">
+        <div class="post-tag">DOCUMENTO</div>
+        <div class="post-title">Sistema de Rangos (Dharma)</div>
+      </header>
+      <div class="post-body">Cargando contenido…</div>
+    </article>
+  `;
+
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+
+  // Carga el txt local
+  fetch(RANGOS_TXT_URL, { cache: 'no-store' })
+    .then(r => {
+      if (!r.ok) throw new Error('No se pudo cargar rangos.txt');
+      return r.text();
+    })
+    .then(txt => {
+      // Render 1 solo post (texto plano)
+      
+const safe = escapeHtml(txt)
+  .split(/\n\s*\n/)
+  .map(p => `<p>${p.replace(/\n/g,'<br/>')}</p>`)
+  .join('');
+
+
+      body.innerHTML = `
+        <article class="post">
+          <header class="post-head">
+            <div class="post-tag">DOCUMENTO</div>
+            <div class="post-title">Sistema de Rangos (Dharma)</div>
+          </header>
+          <div class="post-body">${safe}</div>
+        </article>
+      `;
+    })
+    .catch(() => {
+      body.innerHTML = `
+        <article class="post">
+          <header class="post-head">
+            <div class="post-tag">ERROR</div>
+            <div class="post-title">Sistema de Rangos</div>
+          </header>
+          <div class="post-body">
+            No se encontró <code>${escapeHtml(RANGOS_TXT_URL)}</code>.<br/>
+            Crea ese archivo local y recarga.
+          </div>
+        </article>
+      `;
+    });
+}
+
+function closeRangosModal() {
+  const modal = document.getElementById('rangosModal');
+  if (!modal) return;
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+}
+
+function bindRangosUI() {
+  const btn = document.getElementById('openRangos');
+  const close = document.getElementById('rangosClose');
+  const back = document.getElementById('rangosBackdrop');
+
+  btn?.addEventListener('click', openRangosModal);
+  close?.addEventListener('click', closeRangosModal);
+  back?.addEventListener('click', closeRangosModal);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeRangosModal();
+  });
+}
+
+// Llama esto cuando el DOM ya esté listo
+bindRangosUI();
 
 function setupPubkey() {
   const el = document.getElementById('pubkey');
@@ -141,6 +417,9 @@ const LINKS = [
   { title: 'OpenSea', desc: 'Galería de NFTs', url: 'https://opensea.io/es/0x6a202f991c4c1df079449be9847b1dac3f51854f', icon: 'assets/icons/opensea.svg' },
   { title: 'Decentraland', desc: 'Mi Avatar del Metaverso', url: 'https://decentraland.org/profile/accounts/0x6a202f991c4c1df079449be9847b1dac3f51854f', icon: 'assets/icons/decentraland.svg' },
   { title: 'TikTok', desc: 'Tecnologías del futuro (T2 SOON)', url: 'https://www.tiktok.com/@alemty.eth', icon: 'assets/icons/tiktok.svg' },
+  { title: 'GitHub · alemtyDAO', desc: 'Repositorio del proyecto', url: 'https://github.com/Alemty/alemty.eth-DAO', icon: 'assets/icons/github.svg' },
+  { title: 'WhatsApp', desc: '(SOON)', url: '#', icon: 'assets/icons/whatsapp.svg' },
+
 ];
 
 const cardsEl = document.getElementById('cards');
@@ -158,6 +437,14 @@ if (cardsEl) {
     const a = document.createElement('a');
     a.className = 'btn';
     a.href = l.url;
+    
+if (l.url === '#') {
+  a.setAttribute('aria-disabled','true');
+  a.style.pointerEvents='none';
+  a.style.opacity='0.7';
+  a.textContent='Próximamente';
+}
+
     a.target = '_blank';
     a.rel = 'noopener noreferrer';
     a.textContent = 'Abrir';
@@ -193,9 +480,28 @@ function closeDrawer() {
 if (menuBtn) menuBtn.addEventListener('click', () => (menuDrawer?.classList.contains('open') ? closeDrawer() : openDrawer()));
 if (menuClose) menuClose.addEventListener('click', closeDrawer);
 if (backdrop) backdrop.addEventListener('click', closeDrawer);
+menuAutoCloseSections();
+menuCompactInit();
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && menuDrawer?.classList.contains('open')) closeDrawer();
 });
+
+
+// v0.05: Menu accordion behavior (only one section open at a time)
+function menuAutoCloseSections() {
+  const sections = Array.from(document.querySelectorAll('.menu-section'));
+  sections.forEach((d) => {
+    d.addEventListener('toggle', () => {
+      if (!d.open) return;
+      sections.forEach((o) => { if (o !== d) o.open = false; });
+    });
+  });
+}
+function menuCompactInit() {
+  const sections = Array.from(document.querySelectorAll('.menu-section'));
+  if (!sections.length) return;
+  sections.forEach((s, i) => (s.open = i === 0));
+}
 
 // Tabs for certifications
 const tabList = document.getElementById('tabList');
@@ -204,8 +510,8 @@ const CATEGORY_PRIORITY = ['IA', 'Web 3.0', 'Cloud', 'TI', 'Marketing', 'Educati
 
 fetch('assets/data/certifications.v3.json')
   .then((r) => r.json())
-  .then((list) => buildTabs(Array.isArray(list) ? list : []))
-  .catch(() => buildTabs([]));
+  .then((list) => buildCertCollage(Array.isArray(list) ? list : []))
+  .catch(() => buildCertCollage([]));
 
 function badgeIconFor(item) {
   const t = (item.title ?? '').toLowerCase();
@@ -556,8 +862,8 @@ if (phaseBar) {
 }
 
 // Forum (local prototype)
-const POSTS_KEY = 'forum.posts.v0.03';
-const ANN_KEY = 'forum.announcement.v0.03';
+const POSTS_KEY = 'forum.posts.v0.05';
+const ANN_KEY = 'forum.announcement.v0.05';
 let currentSearch = '';
 
 function loadPosts() {
@@ -588,7 +894,10 @@ function initForum() {
   if (search && !search.dataset.bound) {
     search.dataset.bound = '1';
     search.addEventListener('input', () => {
-      currentSearch = (search.value ?? '').trim().toLowerCase();
+      
+const q = (search.value ?? '').trim().toLowerCase();
+currentSearch = q.length >= 2 ? q : '';
+
       renderFeed();
     });
   }
@@ -646,7 +955,7 @@ function initForum() {
   const composerHint = document.getElementById('composerHint');
 
   if (composerHint) composerHint.textContent = DID.connected ? 'DID verificado. Publica tu post.' : 'Requiere wallet (DID) para publicar.';
-
+populateTopicSelect();
   if (publish && !publish.dataset.bound) {
     publish.dataset.bound = '1';
     publish.addEventListener('click', () => {
@@ -662,16 +971,21 @@ function initForum() {
         return;
       }
       const list = loadPosts();
-      const post = {
-        id: crypto.randomUUID?.() ?? String(Date.now()) + Math.random(),
-        addr: DID.address,
-        title: t,
-        body: b,
-        ts: Date.now(),
-        likes: 0,
-        likedBy: {},
-        comments: [],
-      };
+      
+const topicKey = (document.getElementById('postTopic')?.value ?? '').trim();
+
+const post = {
+  id: crypto.randomUUID?.() ?? String(Date.now()) + Math.random(),
+  addr: DID.address,
+  title: t,
+  body: b,
+  topic: topicKey || '',
+  ts: Date.now(),
+  likes: 0,
+  likedBy: {},
+  comments: [],
+};
+
       list.push(post);
       savePosts(list);
       if (title) title.value = '';
@@ -690,7 +1004,9 @@ function score(post) {
 
 function matchesSearch(p) {
   if (!currentSearch) return true;
-  const hay = `${p.title ?? ''} ${p.body ?? ''} ${p.addr ?? ''}`.toLowerCase();
+  const comments = Array.isArray(p.comments) ? p.comments : [];
+  const cText = comments.map((c) => `${c.text ?? ''} ${c.addr ?? ''}`).join(' ');
+  const hay = `${p.title ?? ''} ${p.body ?? ''} ${p.addr ?? ''} ${cText}`.toLowerCase();
   return hay.includes(currentSearch);
 }
 
@@ -700,7 +1016,11 @@ function renderFeed() {
 
   const list = loadPosts();
   const ordered = list.slice().sort((a, b) => (b.ts ?? 0) - (a.ts ?? 0));
-  const filtered = ordered.filter(matchesSearch);
+  
+const filtered = ordered
+  .filter(p => !currentTopicKey || (p.topic === currentTopicKey))
+  .filter(matchesSearch);
+
 
   if (!filtered.length) {
     feed.innerHTML = currentSearch
@@ -728,19 +1048,55 @@ function renderFeed() {
       vote.appendChild(likeBtn);
       vote.appendChild(count);
 
-      const card = document.createElement('div');
-      card.className = 'post-card';
-      card.innerHTML = `
-        <h4>${escapeHtml(p.title)}</h4>
-        <div class="post-meta">
-          <span class="mono">${shortAddr(p.addr)}</span>
-          <span>·</span>
-          <span>${fmtTime(p.ts)}</span>
-          <span>·</span>
-          <span>${p.comments?.length ?? 0} comentarios</span>
-        </div>
-        <div class="post-snippet">${escapeHtml(p.body)}</div>
-      `;
+      
+const card = document.createElement('div');
+card.className = 'post-card';
+
+// Título
+const h4 = document.createElement('h4');
+h4.textContent = p.title ?? '';
+
+// Meta row
+const meta = document.createElement('div');
+meta.className = 'post-meta';
+
+// Autor (clickable → perfil DID)
+const authorBtn = document.createElement('button');
+authorBtn.type = 'button';
+authorBtn.className = 'author-link';
+authorBtn.textContent = shortAddr(p.addr);
+authorBtn.title = 'Ver perfil DID';
+authorBtn.addEventListener('click', () => openProfileModal(p.addr));
+
+// Separadores y datos
+const dot1 = document.createElement('span');
+dot1.textContent = '·';
+
+const timeSpan = document.createElement('span');
+timeSpan.textContent = fmtTime(p.ts);
+
+const dot2 = document.createElement('span');
+dot2.textContent = '·';
+
+const cSpan = document.createElement('span');
+cSpan.textContent = `${p.comments?.length ?? 0} comentarios`;
+
+// Cuerpo
+const snippet = document.createElement('div');
+snippet.className = 'post-snippet';
+snippet.textContent = p.body ?? '';
+
+// Montaje
+meta.appendChild(authorBtn);
+meta.appendChild(dot1);
+meta.appendChild(timeSpan);
+meta.appendChild(dot2);
+meta.appendChild(cSpan);
+
+card.appendChild(h4);
+card.appendChild(meta);
+card.appendChild(snippet);
+
 
       const controls = document.createElement('div');
       controls.className = 'post-controls';
@@ -853,7 +1209,11 @@ function renderFeed() {
     });
   }
 
-  renderSidebars(list);
+  
+renderSidebars(list);
+initRoomsTopics();
+initPresetTopics();
+
 }
 
 function renderSidebars(list) {
@@ -1032,3 +1392,149 @@ function renderSidebars(list) {
     init();
   });
 })();
+
+
+// v0.05: Salas y temas (UI lista; persistencia backend en siguiente fase)
+const ROOMS_KEY = 'rooms.v0.05';
+const TOPICS_KEY = 'topics.v0.05';
+
+function slugify(s){
+  return String(s||'')
+    .trim()
+    .toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9]+/g,'-')
+    .replace(/(^-|-$)/g,'');
+}
+
+function getAllTopics(){
+  const custom = loadList(TOPICS_KEY).map(t => ({
+    key: slugify(t),
+    label: t,
+    icon: '▣',
+    welcome: `Bienvenido a ${t}.`
+  }));
+
+  const map = new Map();
+  PRESET_TOPICS.forEach(t => map.set(t.key, t));
+  custom.forEach(t => { if (!map.has(t.key)) map.set(t.key, t); });
+
+  return Array.from(map.values());
+}
+
+function populateTopicSelect(){
+  const sel = document.getElementById('postTopic');
+  if (!sel) return;
+  const prev = sel.value;
+  sel.innerHTML = '<option value="">Sin tema</option>';
+  getAllTopics().forEach(t => {
+    const o = document.createElement('option');
+    o.value = t.key;
+    o.textContent = `${t.icon} ${t.label}`;
+    sel.appendChild(o);
+  });
+  if (prev) sel.value = prev;
+}
+
+function loadList(key){
+  try { return JSON.parse(localStorage.getItem(key) || '[]'); } catch { return []; }
+}
+function saveList(key, arr){
+  localStorage.setItem(key, JSON.stringify(arr));
+}
+function renderChips(listEl, items){
+  if (!listEl) return;
+  listEl.innerHTML = '';
+  if (!items.length){
+    const li = document.createElement('li');
+    li.className = 'chip muted';
+    li.textContent = 'Sin elementos aún.';
+    listEl.appendChild(li);
+    return;
+  }
+  items.slice(0,8).forEach((t)=>{
+    const li = document.createElement('li');
+    li.className = 'chip';
+    li.textContent = t;
+    listEl.appendChild(li);
+  });
+}
+function initRoomsTopics(){
+  const roomsList = document.getElementById('roomsList');
+  const createRoomBtn = document.getElementById('createRoomBtn');
+  const createTopicBtn = document.getElementById('createTopicBtn');
+  const viewRoomsBtn = document.getElementById('viewRoomsBtn');
+  const viewTopicsBtn = document.getElementById('viewTopicsBtn');
+
+  renderChips(roomsList, loadList(ROOMS_KEY));
+
+  createRoomBtn?.addEventListener('click', () => {
+    const name = prompt('Nombre de la sala privada/grupo:');
+    if (!name) return;
+    const next = loadList(ROOMS_KEY);
+    next.unshift(name.trim());
+    saveList(ROOMS_KEY, next);
+    renderChips(roomsList, next);
+  });
+  
+createTopicBtn?.addEventListener('click', () => {
+  const name = prompt('Nombre del tema/comunidad:');
+  if (!name) return;
+  const next = loadList(TOPICS_KEY);
+  next.unshift(name.trim());
+  saveList(TOPICS_KEY, next);
+  initPresetTopics();      // vuelve a pintar chips
+  populateTopicSelect();   // actualiza selector del composer
+});
+
+  viewRoomsBtn?.addEventListener('click', () => alert('v0.05: listo para backend. Aquí mostraremos salas con permisos y persistencia.'));
+  viewTopicsBtn?.addEventListener('click', () => alert('v0.05: listo para backend. Aquí mostraremos comunidades/temas con persistencia.'));
+}
+
+const PRESET_TOPICS=[
+  {key:'ciencia',label:'Ciencia',icon:'🧪',welcome:'Bienvenido a Ciencia. Comparte ideas, papers y debates.'},
+  {key:'offtopic',label:'Off Topic',icon:'🎭',welcome:'Bienvenido a Off Topic. Conversación libre.'},
+  {key:'salud',label:'Salud',icon:'🩺',welcome:'Bienvenido a Salud. Bienestar y experiencias.'},
+  {key:'politica',label:'Política',icon:'🏛️',welcome:'Bienvenido a Política. Debate con respeto.'},
+  {key:'web3',label:'Web3',icon:'⛓️',welcome:'Bienvenido a Web3. Identidad, DAO y construcción.'},
+];
+
+function openTopicModal(t){
+  const modal=document.getElementById('topicModal');
+  const title=document.getElementById('topicTitle');
+  const body=document.getElementById('topicBody');
+  const close=document.getElementById('topicClose');
+  const back=document.getElementById('topicBackdrop');
+  if(!modal||!title||!body) return;
+
+  title.textContent=`${t.icon} ${t.label}`;
+  body.innerHTML=
+    `<p class="meta">${escapeHtml(t.welcome)}</p>`+
+    `<div class="topic-box">`+
+      `<div class="topic-head"><strong>Top post del tema</strong><span class="meta small">(placeholder)</span></div>`+
+      `<p class="meta">Aquí se mostrará el top post y el feed del subtema, con miembros y gobernanza interna.</p>`+
+    `</div>`;
+
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden','false');
+
+  const closeFn=()=>{
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden','true');
+  };
+  close?.addEventListener('click',closeFn,{once:true});
+  back?.addEventListener('click',closeFn,{once:true});
+}
+
+function initPresetTopics(){
+  const list=document.getElementById('topicsList');
+  if(!list) return;
+  list.innerHTML='';
+  PRESET_TOPICS.forEach(t=>{
+    const li=document.createElement('li');
+    li.className='chip topic';
+    li.innerHTML=`<span class="topic-ico">${t.icon}</span><span>${t.label}</span>`;
+    li.addEventListener('click',()=>openTopicModal(t));
+    list.appendChild(li);
+  });
+}
