@@ -1,4 +1,6 @@
-alemty.eth no nace como un token, una DAO ni una promesa tecnológica.  
+## alemty.eth 
+
+no nace como un token, una DAO ni una promesa tecnológica.  
 Nace como **una identidad consciente en Web3**.
 
 Este proyecto existe para demostrar que la descentralización no comienza con dinero,  
