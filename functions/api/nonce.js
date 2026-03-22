@@ -6,27 +6,26 @@ export async function onRequestGet(context) {
     return json({ ok: false, error: "KV binding missing: SIWE_NONCES" }, 500);
   }
 
-  const nonce = makeNonce(24);
-  const ttlSeconds = 10 * 60;
+  // ✅ nonce SIWE: alfanumérico y >= 8 chars
+  const nonce = makeAlphanumericNonce(24);
 
-  await NONCES.put(`nonce:${nonce}`, "1", {
-    expirationTtl: ttlSeconds,
-  });
+  const ttlSeconds = 10 * 60;
+  await NONCES.put(`nonce:${nonce}`, "1", { expirationTtl: ttlSeconds });
 
   return json({ ok: true, nonce, ttlSeconds });
 }
 
-function makeNonce(bytes) {
-  const arr = new Uint8Array(bytes);
-  crypto.getRandomValues(arr);
-  return base64Url(arr);
-}
+// ✅ SOLO A-Z a-z 0-9
+function makeAlphanumericNonce(length = 24) {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const bytes = new Uint8Array(length);
+  crypto.getRandomValues(bytes);
 
-function base64Url(arr) {
-  let str = "";
-  for (let i = 0; i < arr.length; i++) str += String.fromCharCode(arr[i]);
-  const b64 = btoa(str);
-  return b64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+  let out = "";
+  for (let i = 0; i < length; i++) {
+    out += chars[bytes[i] % chars.length];
+  }
+  return out;
 }
 
 function json(data, status = 200) {
@@ -38,4 +37,5 @@ function json(data, status = 200) {
     },
   });
 }
+
 
