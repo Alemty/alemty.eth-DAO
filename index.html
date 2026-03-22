@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>alemty.eth v0.03</title>
+  <title>alemty.eth v0.06</title>
   <meta name="description" content="alemty.eth · Identidad DID + Comunidad DAO (incubación)." />
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -15,7 +15,7 @@
       <div class="brand">
         <span class="sigil" aria-hidden="true">⟁</span>
         <span class="brand-text">alemty.eth</span>
-        <span class="ver" id="verTag">v0.03</span>
+        <span class="ver" id="verTag">v0.06</span>
       </div>
       <div class="topbar-right">
         <button id="themeToggle" class="icon-btn" aria-label="Cambiar tema" title="Cambiar tema">🌘</button>
@@ -35,10 +35,10 @@
           <div class="hero-title">
             <p class="kicker">Ciencia · Filosofía · Gnosis · Web3.0</p>
             <h1>
-              Escuela Moderna de Conocimiento Oculto<br />
+              Organización Autónoma Descentralizada  <br />
               <span class="emerald">alemty.eth</span>
             </h1>
-            <p class="sub">Identidad Digital · DID · Comunidad DAO</p>
+            <p class="sub">Identidad Digital · ENS · Comunidad DAO</p>
           </div>
         </div>
       </section>
@@ -58,7 +58,7 @@
           <button class="copy-btn" id="copyBtn">Copiar</button>
           <span id="copyOk" class="copy-ok" hidden>¡Copiado!</span>
         </div>
-        <p class="meta center">Inicia sesión con MetaMask para acceder al foro.</p>
+        <p class="meta center">Inicia sesión con MetaMask.</p>
       </section>
 
       <section class="book-portal" aria-label="Lanzamiento del libro">
@@ -90,8 +90,9 @@
     <!-- PAGE: COMUNIDAD (subdom) -->
     <!-- ========================= -->
     <main id="pageCommunity" class="page" aria-label="Comunidad" hidden>
+      
       <section class="community-top">
-        <div class="container">
+        <div class="container community-top-row">
           <div class="community-brand">
             <span class="community-dot" aria-hidden="true">●</span>
             <div>
@@ -99,14 +100,44 @@
               <p class="community-sub">Foro descentralizado, sin censura.</p>
             </div>
           </div>
+          <div class="community-actions">
+            
+<button class="doc-btn" id="openRangos" type="button">
+  Sistema de Rangos
+</button>
+</a>
+          </div>
         </div>
       </section>
+
 
       <section class="container" id="comunidad">
         <div class="forum-grid">
           <!-- MAIN -->
           <div class="forum-main">
-            <!-- PINNED ADMIN ANNOUNCEMENT -->
+<!-- SEARCH + FEED HEAD -->
+            <div class="feed-head">
+              <div>
+                <h3 class="section-title">Posts recientes</h3>
+                <span class="meta small">Se ordenan del más nuevo al más antiguo.</span>
+              </div>
+              <div class="search-wrap" role="search" aria-label="Buscar posts">
+                <input id="postSearch" class="search-input" type="search" placeholder="Buscar por post, comentario o DID…" autocomplete="off" />
+                <button id="clearSearch" class="search-clear" aria-label="Limpiar búsqueda" title="Limpiar">✕</button>
+              </div>
+            </div>
+
+            
+            <!-- BANNER (placeholder). Coloca aquí tu banner real más adelante -->
+            <div class="community-banner" id="communityBanner" aria-label="Banner">
+              <div class="banner-glow" aria-hidden="true"></div>
+              <div class="banner-inner">
+                <strong>Comunidad alemty.eth</strong>
+                <span class="meta small">Espacio descentralizado · Identidad DID · Reputación Dharma</span>
+              </div>
+            </div>
+
+<!-- PINNED ADMIN ANNOUNCEMENT -->
             <article class="post pinned" id="adminAnnouncement">
               <header class="post-head">
                 <div class="post-tag">DESTACADO</div>
@@ -130,23 +161,19 @@
               </div>
               <input id="postTitle" class="composer-title" placeholder="Título del post…" maxlength="120" />
               <textarea id="postBody" class="composer-body" rows="5" placeholder="Escribe tu post…"></textarea>
+
+              <div class="composer-topic" aria-label="Tema del post">
+                <label class="meta small" for="postTopic">Tema</label>
+                <select id="postTopic" class="composer-select">
+                  <option value="">Sin tema</option>
+                </select>
+              </div>
+
               <div class="composer-actions">
                 <button id="publishPost" class="btn-primary">Publicar</button>
                 <span class="meta small" id="publishStatus"></span>
               </div>
             </article>
-
-            <!-- SEARCH + FEED HEAD -->
-            <div class="feed-head">
-              <div>
-                <h3 class="section-title">Posts recientes</h3>
-                <span class="meta small">Se ordenan del más nuevo al más antiguo.</span>
-              </div>
-              <div class="search-wrap" role="search" aria-label="Buscar posts">
-                <input id="postSearch" class="search-input" type="search" placeholder="Buscar posts…" autocomplete="off" />
-                <button id="clearSearch" class="search-clear" aria-label="Limpiar búsqueda" title="Limpiar">✕</button>
-              </div>
-            </div>
 
             <div class="feed" id="feed"></div>
           </div>
@@ -163,7 +190,30 @@
               <p class="meta small">Más likeados / comentados.</p>
               <ol class="side-list" id="topGlobal"></ol>
             </div>
-          </aside>
+          
+            <div class="side-card" id="roomsCard">
+              <h4>Salas privadas / grupos</h4>
+              <p class="meta small">Crea espacios privados o por equipo. (UI lista; backend en la siguiente fase)</p>
+              <div class="side-actions">
+                <button class="small-btn primary" id="createRoomBtn">Crear sala</button>
+                <button class="small-btn" id="viewRoomsBtn">Ver salas</button>
+              </div>
+              <ul class="side-chips" id="roomsList"></ul>
+            </div>
+
+            
+<div class="side-card" id="topicsCard">
+  <h4>Comunidades y temas</h4>
+  <p class="meta small">Selecciona un tema para abrir su espacio.</p>
+    <div class="side-actions">
+    <button class="small-btn primary" id="createTopicBtn">Crear tema</button>
+    <button class="small-btn" id="viewTopicsBtn">Ver temas</button>
+  </div>
+
+<ul class="side-chips"
+ id="topicsList"></ul>
+            </div>
+    </aside>
         </div>
       </section>
     </main>
@@ -177,10 +227,16 @@
     </div>
 
     <div class="drawer-body menu-body">
+
+      <div class="doc-bar" aria-label="Documentos">
+        <a class="doc-btn" id="dlWhitepaper" href="assets/docs/whitepaper.pdf" target="_blank" rel="noopener noreferrer" download>Whitepaper</a>
+        <a class="doc-btn" id="dlTokenomics" href="assets/docs/tokenomics.pdf" target="_blank" rel="noopener noreferrer" download>Tokenomics</a>
+      </div>
+    
       <details class="menu-section" open>
         <summary class="menu-summary">1) Conectar Wallet MetaMask (DID)</summary>
         <div class="menu-content">
-          <p class="meta">MetaMask · verificación DID para comentar/publicar (sin custodiar llaves).</p>
+          <p class="meta">MetaMask · verificación DID necesaria para comentar/publicar.</p>
 
           <div class="did-card" id="didCard" aria-live="polite">
             <div class="did-row">
@@ -199,10 +255,10 @@
 
           <div class="wallet-row">
             <button id="connectWallet" class="btn-primary">Conectar MetaMask</button>
-            <button id="disconnectWallet" class="btn-ghost" hidden>Desconectar</button>
+            <button id="disconnectWallet" class="btn-danger" hidden>Desconectar</button>
           </div>
           <div class="wallet-status" id="walletStatus"><span class="pill muted">No conectado</span></div>
-          <p class="meta small">Nota: v0.03 no implementa firma SIWE.</p>
+          <p class="meta small">v0.06 implementa firma SIWE, no costudiamos llaves.</p>
         </div>
       </details>
 
@@ -217,12 +273,16 @@
             <div class="poap-row" id="poapRow"></div>
           </div>
 
-          <div class="with-tabs" aria-label="Acreditaciones">
-            <nav class="drawer-tabs" role="tablist" aria-label="Categorías">
-              <div class="tab-list" id="tabList"></div>
-            </nav>
-            <div class="drawer-tabpanes" id="tabPanes"></div>
-          </div>
+          
+            <div class="cert-collage" aria-label="Acreditaciones destacadas">
+              <div class="cert-collage-head">
+                <strong>Acreditaciones</strong>
+                <span class="meta small">rotación automática</span>
+              </div>
+              <div class="cert-grid" id="certGrid"></div>
+              <p class="meta small">70 acreditaciones</p>
+            </div>
+    
         </div>
       </details>
 
@@ -230,8 +290,7 @@
         <summary class="menu-summary">3) Sobre mí</summary>
         <div class="menu-content">
           <p class="about-lead">
-            Soy Alejandro Gutiérrez (Alemty). Especialista en filosofía y cultura antigua con experiencia profesional en tecnología en general.
-            alemty.eth es una startup tecnológica Web3 que está construyendo una infraestructura organizativa descentralizada, diseñada para operar servicios digitales avanzados — incluyendo consultoría — en entornos Web3 y AR.
+            alemty.eth es un ecosistema Web3 nativo cuya evolución culmina en una Consultora Virtual AR, gobernada por una DAO, operada por agentes de IA, y soportada por infraestructura descentralizada.
           </p>
           <div class="about-block">
             <h3>Visión</h3>
@@ -242,7 +301,7 @@
           <div class="about-block">
             <h3>Misión</h3>
             <p>
-              Construir un ecosistema donde identidad, conocimiento y reputación se coordinen mediante tecnología descentralizada, priorizando libertad, consciencia y sostenibilidad, sin especulación financiera.
+              Construir un ecosistema donde identidad, conocimiento y reputación se coordinen mediante tecnología descentralizada, priorizando libertad, consciencia y sostenibilidad.
             </p>
           </div>
         </div>
@@ -250,7 +309,7 @@
     </div>
 
     <div class="drawer-footer">
-      <p class="legal">© <span id="year">2026</span> alemty.eth · v0.03</p>
+      <p class="legal">© <span id="year">2026</span> alemty.eth · v0.06</p>
     </div>
   </aside>
 
@@ -279,5 +338,60 @@
   </footer>
 
   <script src="app.js" type="module"></script>
+
+  
+<div class="modal" id="topicModal" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="modal-card">
+    <div class="modal-head">
+      <strong id="topicTitle"></strong>
+      <button class="modal-close" id="topicClose" aria-label="Cerrar">Cerrar</button>
+    </div>
+    <div class="modal-body" id="topicBody"></div>
+    <div class="modal-foot">
+      <span class="meta small">v0.06 · UI lista · gobernanza interna por tema en backend</span>
+    </div>
+  </div>
+  <div class="modal-backdrop" id="topicBackdrop" aria-hidden="true"></div>
+</div>
+
+
+
+  <!-- Perfil DID (modal flotante) -->
+  <div class="modal" id="profileModal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-head">
+        <strong id="profileTitle"></strong>
+        <button class="modal-close" id="profileClose" aria-label="Cerrar">Cerrar</button>
+      </div>
+      <div class="modal-body" id="profileBody"></div>
+      <div class="modal-foot">
+        <span class="meta small">v0.06 · Perfil DID · Dharma + Karma</span>
+      </div>
+    </div>
+    <div class="modal-backdrop" id="profileBackdrop" aria-hidden="true"></div>
+  </div>
+
+
+
+<!-- Modal: Sistema de Rangos (1 post desde .txt local) -->
+<div class="modal" id="rangosModal" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="modal-card">
+    <div class="modal-head">
+      <strong id="rangosTitle">Sistema de Rangos</strong>
+      <button class="modal-close" id="rangosClose" aria-label="Cerrar">Cerrar</button>
+    </div>
+
+    <div class="modal-body" id="rangosBody"></div>
+
+    <div class="modal-foot">
+      <span class="meta small">v0.06 · Documento local · 1 post</span>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="rangosBackdrop" aria-hidden="true"></div>
+</div>
+
+
+
 </body>
 </html>
