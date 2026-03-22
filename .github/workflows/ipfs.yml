@@ -14,9 +14,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Upload directory to Pinata
+      - name: Prepare site folder
+        run: |
+          mkdir ipfs
+          cp index.html style.css app.js package.json ipfs/
+          cp -r assets ipfs/
+          cp *.jpg ipfs/ || true
+          cp *.pdf ipfs/ || true
+
+      - name: Upload site to Pinata
         run: |
           curl -X POST "https://api.pinata.cloud/pinning/pinFileToIPFS" \
             -H "pinata_api_key: ${{ secrets.PINATA_API_KEY }}" \
             -H "pinata_secret_api_key: ${{ secrets.PINATA_SECRET_API_KEY }}" \
-            -F "file=@."
+            -F "file=@ipfs"
+
