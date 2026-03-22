@@ -17,15 +17,18 @@ jobs:
       - name: Prepare site folder
         run: |
           mkdir ipfs
-          cp index.html style.css app.js package.json ipfs/
+          cp index.html style.css app.js ipfs/
           cp -r assets ipfs/
           cp *.jpg ipfs/ || true
           cp *.pdf ipfs/ || true
 
-      - name: Upload site to Pinata
+      - name: Upload directory to Pinata (explicit)
         run: |
-          curl -X POST "https://api.pinata.cloud/pinning/pinFileToIPFS" \
+          echo "Uploading to Pinata…"
+          curl -s -X POST "https://api.pinata.cloud/pinning/pinFileToIPFS" \
             -H "pinata_api_key: ${{ secrets.PINATA_API_KEY }}" \
             -H "pinata_secret_api_key: ${{ secrets.PINATA_SECRET_API_KEY }}" \
-            -F "file=@ipfs"
+            -F "file=@ipfs;type=application/x-directory" \
+            -F 'pinataMetadata={"name":"alemty.eth-site"}'
+
 
