@@ -1,349 +1,211 @@
-## alemty.eth 
 
-no nace como un token, una DAO ni una promesa tecnológica.  
-Nace como **una identidad consciente en Web3**.
+# alemty.eth
 
-Este proyecto existe para demostrar que la descentralización no comienza con dinero,  
-sino con **identidad**, **comunidad**, **reputación** y **responsabilidad colectiva**.
+## Descripción general
 
-alemty.eth propone una evolución clara y ordenada:
+alemty.eth es un proyecto Web3 en etapa de construcción que evoluciona hacia una **organización descentralizada (DAO)** con un **producto final orientado a servicios**.
 
-> **primero identidad → luego comunidad → después economía → finalmente producto**
+El proyecto se desarrolla de forma progresiva, priorizando:
+- identidad verificable,
+- comunidad real,
+- coordinación por mérito,
+- y sostenibilidad a largo plazo.
 
-Este repositorio documenta esa evolución.
-
----
-
-## I. Introducción
-
-alemty.eth es un **ecosistema Web3 nativo** cuya evolución culmina en una  
-**Consultora Virtual AR**, gobernada por una **DAO**, operada por **agentes de inteligencia artificial**,  alimentada de **Assets y Lands VR/AR**
-y sostenida por **infraestructura descentralizada**.
-
-A diferencia de muchos proyectos Web3, alemty.eth **no inicia con especulación**,  
-no promete retornos financieros,  
-y no utiliza tokens como sustituto de comunidad o producto.
-
-El diseño es intencionalmente progresivo, humano y verificable.
+alemty.eth no es un proyecto especulativo ni un producto financiero.  
+Es una **estructura organizativa digital** diseñada para crecer de manera ordenada.
 
 ---
 
-## II. El problema que abordamos
+## Objetivo del proyecto
 
-La mayoría de proyectos Web3 fallan por una o varias de estas razones:
+El objetivo de alemty.eth es construir una base tecnológica y social que permita:
 
-- Se enfocan en tokens antes que en personas  
-- Crean DAOs que existen solo en papel  
-- Confunden infraestructura con producto  
-- Utilizan IA como marketing, no como sistema gobernado  
-- Carecen de una transición real de Web2 → Web3 → utilidad tangible  
+- coordinar personas mediante identidad descentralizada,
+- organizar comunidades con reglas claras,
+- habilitar gobernanza distribuida,
+- y, a largo plazo, ofrecer servicios reales operados por una DAO.
 
-alemty.eth responde a este problema con una arquitectura evolutiva,  
-donde **cada capa se construye solo cuando la anterior está madura**.
+El enfoque es **primero organización, luego economía, finalmente producto**.
 
 ---
 
-## III. Misión, Visión y Valores
+## Estado actual
 
-### Misión
+El proyecto se encuentra en una **fase temprana de incubación**, centrada en:
 
-Construir un ecosistema donde **identidad, conocimiento y reputación**  
-se coordinen mediante tecnología descentralizada,  
-priorizando **libertad, consciencia y sostenibilidad**,  
-sin especulación financiera.
+- identidad descentralizada,
+- autenticación por wallet,
+- estructura comunitaria,
+- y bases de gobernanza.
 
-### Visión
-
-Evolucionar desde una **identidad Web3 individual**  
-hacia una **DAO operativa**,  
-y finalmente hacia una **consultora virtual AR**  
-con utilidad real y sostenida en el tiempo.
-
-### Valores Fundamentales
-
-1. **Soberanía Individual**  
-   Cada participante controla su identidad y su participación.
-
-2. **Transparencia Radical**  
-   Las reglas son públicas, auditables y versionadas.
-
-3. **Meritocracia Verificable**  
-   La reputación se construye con acciones, no con capital.
-
-4. **Responsabilidad Colectiva**  
-   El poder se distribuye junto con la responsabilidad.
-
-5. **Diseño a Largo Plazo**  
-   Ninguna decisión se toma para inflar métricas de corto plazo.
+No existe aún un producto comercial final, y esto es intencional.
 
 ---
 
-## IV. Pilares del Ecosistema
+## Arquitectura general
 
-alemty.eth se sostiene sobre cinco pilares operativos:
+alemty.eth se estructura en capas independientes:
 
-1. **Libertad**  
-   Participación abierta, moderación comunitaria y ausencia de censura arbitraria.
+- **Identidad**  
+  Acceso mediante wallet y verificación criptográfica.
 
-2. **Innovación Consciente**  
-   Web3, IA y AR como herramientas evolutivas, no como fines.
+- **Comunidad**  
+  Espacios de participación, reputación y roles.
 
-3. **Descentralización Progresiva**  
-   El poder se distribuye conforme la comunidad madura.
+- **Economía de utilidad**  
+  Tokens diseñados para coordinar comportamiento, no inversión.
 
-4. **Escalabilidad Modular**  
-   El sistema crece sin colapsar ni comprometer sus principios.
+- **Gobernanza**  
+  Propuestas, votación y control colectivo.
 
-5. **Seguridad por Diseño**  
-   Acceso mediante wallet; no se recolectan datos personales.
+- **Producto**  
+  Servicios que se activan solo cuando la organización está madura.
 
----
-
-## V. Arquitectura General
-
-El ecosistema se organiza en capas claramente definidas:
-
-- **Identidad** — ENS y DID  
-- **Comunidad** — DAO social  
-- **Economía** — Token de utilidad  
-- **Infraestructura** — DEX y backend  
-- **Inteligencia** — Agentes IA  
-- **Producto Final** — Consultora Virtual AR  
-
-Cada capa depende de la madurez de la anterior.
+Cada capa se habilita únicamente cuando la anterior es estable.
 
 ---
 
-## VI. Roadmap Evolutivo
+## Roadmap resumido
 
-### Fase 0 — Identidad Digital ✅
+### Fase 0 — Identidad digital ✅  
+Definición del proyecto, narrativa, valores e identidad pública.
 
-El proyecto inicia con una identidad clara y verificable.
+### Fase 1 — Identidad descentralizada ✅  
+Autenticación por wallet, perfiles verificables y roles iniciales.
 
-Se construye:
-- Presencia pública
-- Historia, visión y valores
-- Identidad ENS
-- Reputación visible
-- NFTs, POAPs y logros
+### Fase 2 — Comunidad DAO ⛏️  
+Organización social, participación, reputación y primeras propuestas.
 
-Aquí **nace el proyecto**, no el token.
+### Fase 3 — Economía de utilidad  
+Token no especulativo para incentivar participación y mérito.
 
----
+### Fase 4 — Infraestructura  
+Herramientas internas para autonomía operativa.
 
-### Fase 1 — Identidad Descentralizada (DID) ✅
+### Fase 5 — DAO operativa  
+Gobernanza completa y control colectivo.
 
-El visitante se convierte en **miembro verificable**.
+### Fase 6 — Automatización e IA  
+Agentes como soporte operativo, bajo control de gobernanza.
 
-Se habilita:
-- Sign-In With Ethereum
-- DID visible
-- Roles iniciales
-- Historial on-chain básico
-- Base anti-sybil natural
-
-Web3 comienza por identidad, no por dinero.
+### Fase 7–8 — Producto final  
+Evolución hacia una consultora digital operada por DAO.
 
 ---
 
-### Fase 2 — Comunidad DAO ⛏️ (estado actual)
+## Principios de diseño
 
-La comunidad se organiza antes que el producto.
+alemty.eth se rige por los siguientes principios:
 
-Se construye:
-- Foro Web3
-- Posts, comentarios, likes
-- Categorías creadas por usuarios
-- Roles gamificados
-- Moderación por NFT
-- POAPs por participación
-- Primer sistema de propuestas
+- **No especulación**  
+  El token no representa inversión ni promesa de retorno.
 
-La DAO existe incluso sin producto final.
+- **Meritocracia**  
+  La reputación se gana por participación, no por capital.
 
----
+- **Transparencia**  
+  Reglas públicas, procesos auditables.
 
-### Fase 3 — Economía Utility & Gamificación
+- **Progresividad**  
+  Nada se adelanta antes de tiempo.
 
-El token aparece **solo cuando la comunidad ya existe**.
-
-Se habilita:
-- Token de utilidad ERC-20
-- Obtención por actividad, no por inversión
-- NFTs de rol y badges
-- Historial reputacional
-
-El token coordina comportamiento, no especulación.
+- **Sostenibilidad**  
+  El proyecto está diseñado para mantenerse, no para inflarse.
 
 ---
 
-### Fase 4 — Infraestructura DeFi
+## Tokenomics (resumen)
 
-La DAO adquiere autonomía económica.
+El token de alemty.eth es un **token de utilidad social**.
 
-Se construye:
-- Pools de liquidez
-- Integración con DEX
-- Economía circular interna
+- No hay ICO
+- No hay preventa
+- No hay emisión masiva inicial
 
-El DEX es infraestructura, no el producto.
+El suministro máximo es teórico y la emisión es gradual, basada en actividad real.
 
----
+Distribución general:
+- Comunidad
+- Reserva operativa
+- Equipo fundador
+- Gobernanza DAO
+- Eventos y activaciones
 
-### Fase 5 — DAO Operativa
+El token se utiliza para:
+- coordinación,
+- acceso,
+- reputación,
+- gobernanza.
 
-La comunidad se convierte en organización.
-
-Se habilita:
-- Propuestas formales
-- Votaciones on-chain
-- Tesorería DAO
-- Reglas versionadas
-- Control colectivo de upgrades
-
-Aquí la DAO deja de ser experimento.
-
----
-
-### Fase 6 — Agentes de Inteligencia Artificial
-
-La IA se integra como **asistente gobernado**, no como autoridad.
-
-Se construye:
-- Agentes de onboarding
-- Agentes de análisis DAO
-- Agentes premium ligados a NFTs
-- Memoria contextual por rol
-
-La IA reduce fricción y amplifica inteligencia colectiva.
+No para especulación.
 
 ---
 
-### Fase 7 — Web Espacial y Terreno Virtual
+## Roles y reputación
 
-La web deja de ser página y se convierte en espacio.
+Los roles dentro del ecosistema se asignan mediante **NFTs de utilidad**.
 
-Se habilita:
-- Terreno virtual
-- Navegación espacial
-- Acceso por DID, NFT y POAP
-- Experiencia AR
+Estos roles:
+- representan confianza,
+- habilitan responsabilidades,
+- pueden ser revocados por gobernanza,
+- no otorgan derechos financieros.
 
-La identidad se vuelve presencia.
-
----
-
-### Fase 8 — Consultora Virtual AR (Producto Final)
-
-alemty.eth culmina como:
-
-- Consultora Web3 nativa
-- Gobernada por DAO
-- Operada por agentes IA
-- Con reputación on-chain
-- Con utilidad económica real
-
-El valor se genera por **servicios**, no por promesas.
+La jerarquía es reputacional, no económica.
 
 ---
 
-## VII. Tokenomics Oficial
-
-### Principio Fundamental
-
-El token de alemty.eth **no es un instrumento financiero**.
-
-No representa:
-- Inversión  
-- Equity  
-- Promesa de retorno  
-- Expectativa de apreciación  
-
-Su función es **coordinar acceso, reputación, gobernanza y comportamiento**.
-
----
-
-### Suministro
-
-- Supply máximo teórico: 1,000,000,000 tokens  
-- No hay emisión inicial masiva  
-- No hay ICO  
-- No hay preventa  
-- Emisión gradual y basada en actividad real  
-
-El token está diseñado para **circular y utilizarse**, no para acumularse.
-
----
-
-### Distribución
-
-- Comunidad: 50%  
-- Reserva del ecosistema: 20%  
-- Equipo fundador: 15%  
-- DAO y gobernanza: 10%  
-- Eventos y activaciones: 5%  
-
-Ningún pool existe para especulación.
-
----
-
-### Mecánica de obtención
-
-Los tokens se ganan mediante:
-- Publicaciones
-- Comentarios
-- Likes
-- Contenido destacado
-- Participación sostenida
-- Eventos comunitarios
-
----
-
-## VIII. Roles y NFTs
-
-El token **no define jerarquías**.
-
-La reputación se representa mediante **NFTs de utilidad**.
-
-### Rangos oficiales
-
-Novato → Iniciado → Plata → Oro → Diamante →  
-Avanzado → Refinado → Único → Elite → Superior → **Amasterdamo**
-
-Cada rango:
-- Representa confianza
-- Desbloquea responsabilidades
-- No promete retorno económico
-- Puede ser revocado por gobernanza
-
----
-
-## IX. Gobernanza
+## Gobernanza
 
 La gobernanza se basa en:
-- Propuestas abiertas
-- Votación por mérito + token utility
-- Control colectivo de recursos
-- Transparencia total
-- Reglas públicas y versionadas
 
-El poder no se concentra: **se distribuye y se audita**.
+- propuestas abiertas,
+- votación por mérito y token de utilidad,
+- reglas claras y versionadas,
+- control colectivo de decisiones.
 
----
-
-## X. Principio Final
-
-alemty.eth no utiliza el token para financiar una promesa.
-
-Utiliza la tecnología para **organizar una realidad**.
-
-El valor económico se genera fuera del token:  
-en conocimiento, servicios, reputación y colaboración.
+El objetivo es reducir dependencia de autoridad central conforme el sistema madura.
 
 ---
 
-Esto no es un experimento rápido.  
-Es una arquitectura viva.
+## Uso del repositorio
 
-alemty.eth no corre hacia el futuro.  
-**Lo construye, paso a paso.**
+Este repositorio actúa como:
+
+- fuente de verdad del proyecto,
+- documentación institucional,
+- base técnica inicial,
+- registro de evolución.
+
+El código y los documentos se publican de forma gradual, conforme cada fase se activa.
+
+---
+
+## Advertencia de alcance
+
+alemty.eth es un proyecto en construcción.
+
+Nada en este repositorio debe interpretarse como:
+- oferta de inversión,
+- promesa de retorno,
+- ni compromiso financiero.
+
+La participación es voluntaria y basada en interés genuino en el desarrollo del ecosistema.
+
+---
+
+## Licencia
+
+Por definir.
+
+---
+
+## Cierre
+
+alemty.eth no busca crecer rápido.  
+Busca crecer **bien**.
+
+Primero personas.  
+Luego organización.  
+Después producto.
+
