@@ -1,0 +1,237 @@
+
+{
+  "collection": "alemty.eth Medals",
+  "version": "1.0",
+  "description": "Sistema oficial de medallas NFT de rangos y roles del ecosistema alemty.eth. Dharma define el rango, Aura define el brillo.",
+  "sigil": "⟁",
+  "aura_rules": {
+    "starts_at_rank": "Refinado",
+    "aura_scales_with_dharma": true,
+    "style": "Conquer-like full medal glow (breathing, shimmer, particles)"
+  },
+  "medals": [
+    {
+      "id": "novato",
+      "type": "rank",
+      "tier": 1,
+      "name": "Novato",
+      "material": "dark_bronze",
+      "colors": ["#3B2A22", "#A36A3A"],
+      "symbol": "seed",
+      "aura": { "enabled": false },
+      "virtue": "Potencial",
+      "rarity": "common"
+    },
+    {
+      "id": "iniciado",
+      "type": "rank",
+      "tier": 2,
+      "name": "Iniciado",
+      "material": "warm_bronze",
+      "colors": ["#8A5A2B", "#FFB14A"],
+      "symbol": "spark",
+      "aura": { "enabled": false },
+      "virtue": "Despertar",
+      "rarity": "common"
+    },
+    {
+      "id": "plata",
+      "type": "rank",
+      "tier": 3,
+      "name": "Plata",
+      "material": "silver",
+      "colors": ["#C8CDD2", "#7D8B99"],
+      "symbol": "crescent_moon",
+      "aura": { "enabled": false },
+      "virtue": "Constancia",
+      "rarity": "uncommon"
+    },
+    {
+      "id": "oro",
+      "type": "rank",
+      "tier": 4,
+      "name": "Oro",
+      "material": "gold",
+      "colors": ["#D6A84C", "#2A1A0A"],
+      "symbol": "sun",
+      "aura": { "enabled": false },
+      "virtue": "Impacto",
+      "rarity": "uncommon"
+    },
+    {
+      "id": "diamante",
+      "type": "rank",
+      "tier": 5,
+      "name": "Diamante",
+      "material": "crystal_ice",
+      "colors": ["#BFE8FF", "#3AA7FF", "#F7FCFF"],
+      "symbol": "diamond",
+      "aura": { "enabled": false },
+      "virtue": "Excelencia",
+      "rarity": "rare"
+    },
+    {
+      "id": "avanzado",
+      "type": "rank",
+      "tier": 6,
+      "name": "Avanzado",
+      "material": "titanium_emerald",
+      "colors": ["#18C07A", "#073B2A"],
+      "symbol": "connected_nodes",
+      "aura": {
+        "enabled": true,
+        "style": "static_soft",
+        "color": "#18C07A"
+      },
+      "virtue": "Construcción",
+      "rarity": "rare"
+    },
+    {
+      "id": "refinado",
+      "type": "rank",
+      "tier": 7,
+      "name": "Refinado",
+      "material": "turquoise_alloy",
+      "colors": ["#19D3C5", "#00B7FF"],
+      "symbol": "eye",
+      "aura": {
+        "enabled": true,
+        "style": "animated",
+        "color": "turquoise_cyan",
+        "pulse": "slow",
+        "particles": 6
+      },
+      "virtue": "Claridad",
+      "rarity": "epic"
+    },
+    {
+      "id": "unico",
+      "type": "rank",
+      "tier": 8,
+      "name": "Único",
+      "material": "cold_chrome",
+      "colors": ["#2F74FF", "#4BD3FF"],
+      "symbol": "prism_triangle",
+      "aura": {
+        "enabled": true,
+        "style": "animated",
+        "color": "blue",
+        "pulse": "medium",
+        "particles": 8
+      },
+      "virtue": "Identidad",
+      "rarity": "epic"
+    },
+    {
+      "id": "elite",
+      "type": "rank",
+      "tier": 9,
+      "name": "Elite",
+      "material": "obsidian_purple",
+      "colors": ["#8A2BE2", "#C04BFF"],
+      "symbol": "abstract_crest",
+      "aura": {
+        "enabled": true,
+        "style": "animated",
+        "color": "purple",
+        "pulse": "fast",
+        "particles": 11
+      },
+      "virtue": "Liderazgo",
+      "rarity": "legendary"
+    },
+    {
+      "id": "superior",
+      "type": "rank",
+      "tier": 10,
+      "name": "Superior",
+      "material": "dark_steel_ruby",
+      "colors": ["#FF2B2B", "#A60000"],
+      "symbol": "pillar_flame",
+      "aura": {
+        "enabled": true,
+        "style": "animated",
+        "color": "red",
+        "pulse": "fast",
+        "particles": 14
+      },
+      "virtue": "Dominio",
+      "rarity": "legendary"
+    },
+    {
+      "id": "amasterdamo",
+      "type": "rank",
+      "tier": 11,
+      "name": "Amasterdamo",
+      "material": "iridescent_gold",
+      "colors": ["#FFD24A", "#B57A00", "#FFF6D6"],
+      "symbol": "dragon_spiral",
+      "aura": {
+        "enabled": true,
+        "style": "animated_double_halo",
+        "color": "gold",
+        "pulse": "very_fast",
+        "particles": 16,
+        "effects": ["shimmer", "electric_arc"]
+      },
+      "virtue": "Maestría",
+      "rarity": "mythic"
+    },
+
+    {
+      "id": "admin",
+      "type": "role",
+      "name": "Admin",
+      "material": "obsidian_cyan",
+      "colors": ["#05070B", "#00E5FF"],
+      "symbol": "triangle_key",
+      "aura": { "enabled": false },
+      "authority": "system",
+      "rarity": "institutional"
+    },
+    {
+      "id": "moderador",
+      "type": "role",
+      "name": "Moderador",
+      "material": "steel_amber",
+      "colors": ["#6E7B88", "#FFB14A", "#FF3B3B"],
+      "symbol": "shield_eye",
+      "aura": { "enabled": false },
+      "authority": "moderation",
+      "rarity": "institutional"
+    },
+    {
+      "id": "custodio",
+      "type": "role",
+      "name": "Custodio de Reglas",
+      "material": "deep_blue_silver",
+      "colors": ["#0B2A5B", "#C8CDD2"],
+      "symbol": "law_book",
+      "aura": { "enabled": false },
+      "authority": "rules",
+      "rarity": "institutional"
+    },
+    {
+      "id": "operador_ia",
+      "type": "role",
+      "name": "Operador de Agentes IA",
+      "material": "titanium_violet",
+      "colors": ["#7E8A99", "#B04BFF", "#63F3FF"],
+      "symbol": "ai_core",
+      "aura": { "enabled": false },
+      "authority": "operations",
+      "rarity": "institutional"
+    },
+    {
+      "id": "patrocinador",
+      "type": "role",
+      "name": "Patrocinador",
+      "material": "platinum_green",
+      "colors": ["#D7DDE6", "#38D48A"],
+      "symbol": "support_hand",
+      "aura": { "enabled": false },
+      "authority": "support",
+      "rarity": "honorary"
+    }
+  ]
+}
