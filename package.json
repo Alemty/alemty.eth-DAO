@@ -1,0 +1,9 @@
+
+{
+  "name": "alemty-eth-dao",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "siwe": "latest"
+  }
+}
