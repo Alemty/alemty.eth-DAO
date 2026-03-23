@@ -29,13 +29,27 @@ html,body{min-height:100%}
 body{
   margin:0;
   color:var(--text);
+
   background:
     radial-gradient(1100px 520px at 20% -10%, rgba(0,255,213,.12), transparent 55%),
     radial-gradient(900px 520px at 90% 5%, rgba(0,163,255,.10), transparent 60%),
     linear-gradient(180deg,var(--bg)0%,var(--bg2)100%);
-  font-family: Segoe UI, -apple-system, system-ui, Roboto, Arial, sans-serif;
+  
+font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    system-ui,
+    sans-serif;
+
   padding-bottom: calc(var(--phase-h) + 120px);
   overflow-x:hidden;
+  
+letter-spacing: 0.1px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+
 }
 
 #bgDots{position:fixed;inset:0;z-index:-1}
@@ -640,4 +654,341 @@ body.drawer-open{overflow:hidden;}
 .post-body{
   overflow-wrap:anywhere;
   line-height:1.55;
+}
+
+
+/* ===== Character Sheet (RPG Profile) ===== */
+#profileBtn{padding:8px 12px}
+
+.char-sheet{
+  display:grid;
+  grid-template-columns: 260px 1fr;
+  gap:14px;
+}
+@media (max-width:720px){
+  .char-sheet{grid-template-columns:1fr;}
+}
+.char-card{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.10);
+  border-radius:16px;
+  padding:12px;
+}
+:root.light .char-card{background:rgba(0,0,0,0.03);border-color:rgba(0,0,0,0.08)}
+
+.char-avatar{
+  display:grid;
+  place-items:center;
+  position:relative;
+  border-radius:18px;
+  overflow:hidden;
+  min-height:220px;
+  background:linear-gradient(135deg, rgba(0,255,213,.14), rgba(0,163,255,.10), rgba(255,255,255,0.03));
+}
+.char-avatar img{
+  width:160px;
+  height:160px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid rgba(255,255,255,0.16);
+  box-shadow:0 14px 30px rgba(0,0,0,0.35);
+}
+.char-halo{
+  position:absolute;
+  inset:-30px;
+  pointer-events:none;
+  filter:blur(18px);
+  opacity:.75;
+  background:radial-gradient(closest-side, rgba(0,255,213,.20), rgba(0,163,255,.18), transparent 62%);
+}
+
+.char-title{
+  margin:10px 0 0;
+  font-weight:980;
+}
+.char-sub{
+  margin:6px 0 0;
+}
+
+.bars{
+  display:grid;
+  gap:10px;
+}
+.bar{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.10);
+  border-radius:14px;
+  padding:10px 12px;
+}
+.bar-top{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.bar-track{
+  height:12px;
+  border-radius:999px;
+  background:rgba(255,255,255,0.08);
+  overflow:hidden;
+  margin-top:10px;
+}
+.bar-fill{
+  height:100%;
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--primary),var(--accent));
+  box-shadow:0 0 18px rgba(0,255,213,0.22);
+}
+.bar-fill.karma{background:linear-gradient(90deg, rgba(255,80,80,.95), rgba(255,160,90,.85)); box-shadow:0 0 18px rgba(255,90,90,.22)}
+.bar-fill.aura{background:linear-gradient(90deg, rgba(220,240,255,.95), rgba(120,220,255,.85)); box-shadow:0 0 18px rgba(120,220,255,.22)}
+
+.equip-grid{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0,1fr));
+  gap:10px;
+  margin-top:10px;
+}
+@media (max-width:520px){
+  .equip-grid{grid-template-columns:repeat(2, minmax(0,1fr));}
+}
+.equip-slot{
+  border-radius:14px;
+  padding:10px;
+  border:1px solid rgba(255,255,255,0.10);
+  background:rgba(255,255,255,0.03);
+  display:grid;
+  gap:6px;
+  min-height:86px;
+}
+.equip-slot .lbl{
+  font-size:.72rem;
+  letter-spacing:.35px;
+  text-transform:uppercase;
+  color:var(--muted);
+  font-weight:900;
+}
+.equip-slot .ico{
+  width:44px;
+  height:44px;
+  border-radius:12px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg, rgba(0,255,213,.18), rgba(0,163,255,.14));
+  border:1px solid rgba(255,255,255,0.10);
+  box-shadow:0 10px 22px rgba(0,0,0,0.26);
+  font-size:1.2rem;
+}
+.equip-slot .val{font-weight:950;color:var(--panel-text)}
+
+/* Perfil button – igualar estilo con topbar */
+.profile-btn {
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--text);
+}
+
+.profile-btn:hover {
+  filter: saturate(120%) brightness(1.05);
+}
+
+/* Opcional: glow sutil como botón importante */
+.profile-btn {
+  box-shadow:
+    0 6px 14px rgba(0,0,0,0.18),
+    0 0 0 1px rgba(0,255,213,0.15) inset;
+}
+
+.profile-ico {
+  font-size: 1.2rem;
+  font-weight: 950;
+  color: var(--primary);
+}
+
+/* =====================================
+   AVATAR PLANO ABSOLUTO
+   ===================================== */
+
+.char-avatar,
+.char-avatar img {
+  background: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+.char-avatar img {
+  border: 1px solid rgba(255,255,255,0.14) !important;
+}
+
+/* Aura OFF */
+.char-halo,
+.aura {
+  display: none !important;
+}
+
+/* Evitar bleeding de sub-pixel */
+.modal-card {
+  isolation: isolate;
+}
+
+
+/* ===== PERFIL RPG: TIPOGRAFÍA ===== */
+
+.char-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.meta.small {
+  font-size: 0.78rem;
+  letter-spacing: 0.4px;
+  opacity: 0.75;
+}
+
+.stat .k {
+  font-size: 0.7rem;
+  letter-spacing: 0.6px;
+  font-weight: 600;
+}
+
+.stat .v {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+/* ===== PERFIL RPG: SPACING ===== */
+
+.char-card {
+  padding: 14px;
+}
+
+.profile-grid {
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.stat {
+  padding: 8px 10px;
+}
+
+.char-card,
+.stat,
+.bar {
+  border-radius: 12px;
+}
+
+.char-avatar {
+  min-height: 200px;
+}
+
+.char-avatar img {
+  width: 140px;
+  height: 140px;
+}
+
+.stat .v,
+.bar-top strong {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===============================
+   PERFIL RPG — STATS (LIGHT MODE)
+   =============================== */
+
+:root.light .stat {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 180, 200, 0.16),
+    rgba(0, 140, 180, 0.10)
+  );
+  border: 1px solid rgba(0, 120, 160, 0.28);
+  box-shadow: 0 6px 16px rgba(0, 90, 120, 0.12);
+}
+
+:root.light .stat .k {
+  color: #0a3a4a;
+}
+
+:root.light .stat .v {
+  color: #062029;
+}
+
+/* ===============================
+   PERFIL RPG — BARRAS (LIGHT MODE)
+   =============================== */
+
+:root.light .bar {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 180, 200, 0.14),
+    rgba(0, 140, 180, 0.08)
+  );
+  border: 1px solid rgba(0, 120, 160, 0.24);
+  box-shadow: 0 6px 14px rgba(0, 90, 120, 0.10);
+}
+
+:root.light .bar-track {
+  background: rgba(0, 120, 160, 0.18);
+}
+
+/* ===============================
+   PERFIL RPG — TARJETAS (LIGHT MODE)
+   =============================== */
+
+:root.light .char-card {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 180, 200, 0.12),
+    rgba(0, 140, 180, 0.06)
+  );
+  border: 1px solid rgba(0, 120, 160, 0.22);
+  box-shadow: 0 8px 18px rgba(0, 90, 120, 0.14);
+}
+
+/* HUD / PERFIL */
+.char-title {
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.stat .k {
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.stat .v {
+  font-weight: 700;
+}
+
+.stat .v,
+.bar-top strong {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===== Rol sobre rango (perfil personaje) ===== */
+
+.char-role {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 4px;
+}
+
+/* ===== Direcciones cortadas correctamente ===== */
+
+.addr {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ===== Blindaje direcciones en menú ===== */
+#didAddress {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
