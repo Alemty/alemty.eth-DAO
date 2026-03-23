@@ -10,6 +10,10 @@
 <body>
   <canvas id="bgDots" aria-hidden="true"></canvas>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <div id="appWrap">
     <header class="topbar" role="banner">
       <div class="brand">
@@ -19,7 +23,19 @@
       </div>
       <div class="topbar-right">
         <button id="themeToggle" class="icon-btn" aria-label="Cambiar tema" title="Cambiar tema">🌘</button>
-        <button id="menuBtn" class="menu-btn" aria-expanded="false" aria-controls="menuDrawer" aria-label="Abrir menú" title="Menú">
+        
+ 
+<button
+  id="profileBtn"
+  class="icon-btn profile-btn"
+  type="button"
+  aria-label="Perfil"
+  title="Perfil"
+>
+  🧙
+</button>
+
+<button id="menuBtn" class="menu-btn" aria-expanded="false" aria-controls="menuDrawer" aria-label="Abrir menú" title="Menú">
           <span class="hamburger" aria-hidden="true"></span>
         </button>
       </div>
@@ -58,7 +74,7 @@
           <button class="copy-btn" id="copyBtn">Copiar</button>
           <span id="copyOk" class="copy-ok" hidden>¡Copiado!</span>
         </div>
-        <p class="meta center">Inicia sesión con MetaMask.</p>
+        <p class="meta center" id="loginHint">Inicia sesión con MetaMask.</p>
       </section>
 
       <section class="book-portal" aria-label="Lanzamiento del libro">
@@ -392,6 +408,22 @@
 </div>
 
 
+
+
+<!-- Perfil RPG (modal flotante) -->
+<div class="modal" id="characterModal" aria-hidden="true" role="dialog" aria-modal="true">
+ <div class="modal-card">
+  <div class="modal-head">
+   <strong id="characterTitle">Perfil</strong>
+   <button class="modal-close" id="characterClose" aria-label="Cerrar">Cerrar</button>
+  </div>
+  <div class="modal-body" id="characterBody"></div>
+  <div class="modal-foot">
+   <span class="meta small">v0.06 · Personaje DID · Dharma / Karma / Aura / ALEM</span>
+  </div>
+ </div>
+ <div class="modal-backdrop" id="characterBackdrop" aria-hidden="true"></div>
+</div>
 
 </body>
 </html>
