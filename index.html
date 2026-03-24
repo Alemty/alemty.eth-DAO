@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>alemty.eth v0.13</title>
+  <meta name="description" content="alemty.eth · Identidad DID + Comunidad DAO (incubación)." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <canvas id="bgDots" aria-hidden="true"></canvas>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <div id="appWrap">
+    <header class="topbar" role="banner">
+      
+<button id="homeBrand" class="brand brand-link" type="button" aria-label="Ir a Identidad">
+  <span class="sigil" aria-hidden="true">⟁</span>
+  <span class="brand-text">alemty.eth</span>
+  <span class="ver" id="verTag">v0.13</span>
+</button>
+
+      <div class="topbar-right">
+        <button id="themeToggle" class="icon-btn" aria-label="Cambiar tema" title="Cambiar tema">🌘</button>
+        
+ 
+<button
+  id="profileBtn"
+  class="icon-btn profile-btn"
+  type="button"
+  aria-label="Perfil"
+  title="Perfil"
+>
+  🧙
+</button>
+
+<button id="menuBtn" class="menu-btn" aria-expanded="false" aria-controls="menuDrawer" aria-label="Abrir menú" title="Menú">
+          <span class="hamburger" aria-hidden="true"></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ========================= -->
+    <!-- PAGE: IDENTIDAD (root) -->
+    <!-- ========================= -->
+    <main id="pageIdentity" class="page" aria-label="Identidad">
+      <section class="hero" aria-label="Portada">
+        <div class="hero-glow" aria-hidden="true"></div>
+        <div class="hero-inner container">
+          <div class="hero-title">
+            <p class="kicker">Ciencia · Filosofía · Gnosis · Web3.0</p>
+            <h1>
+              Organización Autónoma Descentralizada  <br />
+              <span class="emerald">alemty.eth</span>
+            </h1>
+            <p class="sub">Identidad Digital · ENS · Comunidad DAO</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="profile container" id="identidad">
+        <div class="avatar-wrap">
+          <img class="avatar" id="avatarImg" src="20260223_205715.jpg" alt="Foto de perfil" loading="eager" />
+          <div class="aura"></div>
+        </div>
+        <h2 class="name">Alejandro Gutierrez Zavala</h2>
+        <p class="ens">
+          <a href="https://app.ens.domains/alemty.eth" target="_blank" rel="noopener noreferrer">alemty.eth</a>
+        </p>
+
+        <div class="pubkey" aria-live="polite">
+          <code id="pubkey" data-full="0x6a202f991c4c1df079449be9847b1dac3f51854f">0x6a20…1854f</code>
+          <button class="copy-btn" id="copyBtn">Copiar</button>
+          <span id="copyOk" class="copy-ok" hidden>¡Copiado!</span>
+        </div>
+        <p class="meta center" id="loginHint">Inicia sesión con MetaMask.</p>
+      </section>
+
+      <section class="book-portal" aria-label="Lanzamiento del libro">
+        <div class="book-frame">
+          <div class="book-badge">NUEVO · Libro</div>
+          <h3 class="book-title">La Simulación del Dragón</h3>
+          <p class="book-sub">
+            Descarga gratuita directa desde esta web.
+            <span class="book-note">Comprar será una forma opcional de apoyar el trabajo.</span>
+          </p>
+          <div class="book-actions">
+            <a class="btn-primary" id="downloadBook" href="La Simulación del Dragón - alemty.eth.pdf" download>Descargar</a>
+            <a class="btn-ghost buy-btn" id="buyBtn" href="#" target="_blank" rel="noopener noreferrer" aria-disabled="true">
+              <span class="buy-main">Comprar</span>
+              <span class="buy-sub">Amazon</span>
+            </a>
+          </div>
+          <div class="book-rune" aria-hidden="true">🐉</div>
+        </div>
+      </section>
+
+      <section class="container" id="contenido">
+        <h3 class="section-title">Sígueme</h3>
+        <div class="cards" id="cards"></div>
+      </section>
+    </main>
+
+    <!-- ========================= -->
+    <!-- PAGE: COMUNIDAD (subdom) -->
+    <!-- ========================= -->
+    <main id="pageCommunity" class="page" aria-label="Comunidad" hidden>
+      
+      <section class="community-top">
+        <div class="container community-top-row">
+          <div class="community-brand">
+            <span class="community-dot" aria-hidden="true">●</span>
+            <div>
+              <h2 class="community-title">alemty.eth</h2>
+              <p class="community-sub">Comunidad DAO</p>
+            </div>
+          </div>
+          <div class="community-actions">
+            
+<button class="doc-btn" id="openRangos" type="button">
+  Sistema de Rangos
+</button>
+          </div>
+        </div>
+      </section>
+
+
+      <section class="container" id="comunidad">
+        <div class="forum-grid">
+          <!-- MAIN -->
+          <div class="forum-main">
+<!-- SEARCH + FEED HEAD -->
+            <div class="feed-head">
+              
+<div>
+    <h3 class="section-title">Posts</h3>
+  </div>
+
+              <div class="search-wrap" role="search" aria-label="Buscar posts">
+                <input id="postSearch" class="search-input" type="search" placeholder="Buscar por post, comentario o DID…" autocomplete="off" />
+                <button id="clearSearch" class="search-clear" aria-label="Limpiar búsqueda" title="Limpiar">✕</button>
+              </div>
+            </div>
+
+            
+            <!-- BANNER (placeholder). Coloca aquí tu banner real más adelante -->
+            <div class="community-banner" id="communityBanner" aria-label="Banner">
+              <div class="banner-glow" aria-hidden="true"></div>
+              <div class="banner-inner">
+                <strong>Bienvenidos a la comunidad DAO alemty</strong>
+                <span class="meta small">Foro descentralizado sin censura.</span>
+              </div>
+            </div>
+
+<!-- PINNED ADMIN ANNOUNCEMENT -->
+            <article class="post pinned" id="adminAnnouncement">
+              <header class="post-head">
+                <div class="post-tag">DESTACADO</div>
+                <div class="post-title">Anuncio del Administrador</div>
+              </header>
+              <div class="post-body" id="announcementText"></div>
+              <div class="post-foot" id="announcementAdminTools" hidden>
+                <textarea id="announcementEdit" rows="3" class="post-editor"></textarea>
+                <div class="post-actions">
+                  <button id="saveAnnouncement" class="btn-primary">Guardar</button>
+                  <button id="resetAnnouncement" class="btn-ghost">Restaurar</button>
+                </div>
+              </div>
+            </article>
+
+            <!-- COMPOSER -->
+            <article class="composer" id="composer">
+              <div class="composer-head">
+                <strong>Crear Post</strong>
+                <span class="meta" id="composerHint">Requiere wallet (DID) para publicar o comentar.</span>
+              </div>
+              <input id="postTitle" class="composer-title" placeholder="Título del post…" maxlength="120" />
+              <textarea id="postBody" class="composer-body" rows="5" placeholder="Escribe tu post…"></textarea>
+
+              <div class="composer-topic" aria-label="Tema del post">
+                <label class="meta small" for="postTopic">Tema</label>
+                <select id="postTopic" class="composer-select">
+                  <option value="">Sin tema</option>
+                </select>
+              </div>
+
+              <div class="composer-actions">
+                <button id="publishPost" class="btn-primary">Publicar</button>
+                <span class="meta small" id="publishStatus"></span>
+              </div>
+            </article>
+
+            <div class="feed" id="feed"></div>
+          </div>
+
+          <!-- SIDEBAR -->
+          <aside class="forum-side">
+            <div class="side-card">
+              <h4>Top de la semana</h4>
+              <p class="meta small">Ranking por interacción (likes + comentarios). Recompensas futuras serán utility y gobernadas por la DAO.</p>
+              <ol class="side-list" id="topWeek"></ol>
+            </div>
+            <div class="side-card">
+              <h4>Top posts (global)</h4>
+              <p class="meta small">Más likeados / comentados.</p>
+              <ol class="side-list" id="topGlobal"></ol>
+            </div>
+          
+            <div class="side-card" id="roomsCard">
+              <h4>Salas privadas / grupos</h4>
+              <p class="meta small">Crea espacios privados o por equipo. (UI lista; backend en la siguiente fase)</p>
+              <div class="side-actions">
+                <button class="small-btn primary" id="createRoomBtn">Crear sala</button>
+                <button class="small-btn" id="viewRoomsBtn">Ver salas</button>
+              </div>
+              <ul class="side-chips" id="roomsList"></ul>
+            </div>
+
+            
+<div class="side-card" id="topicsCard">
+  <h4>Comunidades y temas</h4>
+  <p class="meta small">Selecciona un tema para abrir su espacio.</p>
+    <div class="side-actions">
+    <button class="small-btn primary" id="createTopicBtn">Crear tema</button>
+    <button class="small-btn" id="viewTopicsBtn">Ver temas</button>
+  </div>
+
+<ul class="side-chips"
+ id="topicsList"></ul>
+            </div>
+    </aside>
+        </div>
+      </section>
+    </main>
+    
+<!-- ========================= -->
+<!-- PAGE: TOKEN (subdom lógico) -->
+<!-- ========================= -->
+<main id="pageToken" class="page" aria-label="Token" hidden>
+  <section class="community-top">
+    <div class="container community-top-row">
+      <div class="community-brand">
+        <span class="community-dot" aria-hidden="true">◈</span>
+        <div>
+          <h2 class="community-title">token.alemty.eth</h2>
+          <p class="community-sub">Dashboard Tokenomics</p>
+        </div>
+      </div>
+
+      <div class="community-actions">
+        <button class="doc-btn" type="button" id="openTokenDocs">
+          Tokenomics
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="forum-grid">
+      <div class="forum-main">
+        <article class="post">
+          <header class="post-head">
+            <div class="post-tag">ESTADO</div>
+            <div class="post-title">Tu economía (DID)</div>
+          </header>
+
+          <div class="post-body">
+            <p class="meta">Conecta wallet para ver tu estado: Dharma / Aura / Karma / ALEM.</p>
+
+            <div class="profile-grid" style="margin-top:12px">
+              <div class="stat">
+                <div class="k">Dharma (XP)</div>
+                <div class="v" id="tokDharma">—</div>
+              </div>
+              <div class="stat">
+                <div class="k">Aura (Utility)</div>
+                <div class="v" id="tokAura">—</div>
+              </div>
+              <div class="stat">
+                <div class="k">Karma (Deuda)</div>
+                <div class="v" id="tokKarma">—</div>
+              </div>
+              <div class="stat">
+                <div class="k">ALEM (Gov)</div>
+                <div class="v" id="tokAlem">—</div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <aside class="forum-side">
+        <div class="side-card">
+          <h4>Sala de Gobernanza (SOON)</h4>
+          <p class="meta small">
+            Aquí irán propuestas, votos y consenso cuando actives el módulo on-chain.
+          </p>
+        </div>
+
+        <div class="side-card">
+          <h4>Acciones rápidas</h4>
+          <div class="side-actions">
+            <button class="small-btn primary" type="button" disabled>Mint (SOON)</button>
+            <button class="small-btn" type="button" disabled>Stake (SOON)</button>
+            <button class="small-btn" type="button" disabled>Vote (SOON)</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+</main>
+
+  </div>
+
+  <!-- Drawer único (Menú) -->
+  <aside class="drawer" id="menuDrawer" role="dialog" aria-modal="true" aria-labelledby="menuTitle" aria-hidden="true">
+    <div class="drawer-header">
+      <h2 id="menuTitle">Menú</h2>
+      <button class="drawer-close" id="menuClose" aria-label="Cerrar">Cerrar</button>
+    </div>
+
+    <div class="drawer-body menu-body">
+
+      <div class="doc-bar" aria-label="Documentos">
+        <a class="doc-btn" id="dlWhitepaper" href="assets/docs/whitepaper.pdf" target="_blank" rel="noopener noreferrer" download>Whitepaper</a>
+        <a class="doc-btn" id="dlTokenomics" href="assets/docs/tokenomics.pdf" target="_blank" rel="noopener noreferrer" download>Tokenomics</a>
+      </div>
+    
+      <details class="menu-section" open>
+        <summary class="menu-summary">1) Conectar Wallet MetaMask (DID)</summary>
+        <div class="menu-content">
+          <p class="meta">MetaMask · verificación DID necesaria para comentar/publicar.</p>
+
+          <div class="did-card" id="didCard" aria-live="polite">
+            <div class="did-row">
+              <strong>Estado</strong>
+              <span id="didStatus" class="pill">Visitante (solo lectura)</span>
+            </div>
+            <div class="did-row">
+              <strong>DID</strong>
+              <span id="didAddress" class="mono">—</span>
+            </div>
+            <div class="did-row">
+              <strong>Rol</strong>
+              <span id="didRole" class="pill muted">—</span>
+            </div>
+          </div>
+
+          <div class="wallet-row">
+            <button id="connectWallet" class="btn-primary">Conectar MetaMask</button>
+            <button id="disconnectWallet" class="btn-danger" hidden>Desconectar</button>
+          </div>
+          <div class="wallet-status" id="walletStatus"><span class="pill muted">No conectado</span></div>
+          <p class="meta small">v0.13 implementa firma SIWE, no costudiamos llaves.</p>
+        </div>
+      </details>
+
+      <details class="menu-section">
+        <summary class="menu-summary">2) Credenciales</summary>
+        <div class="menu-content">
+          <div class="poap-block">
+            <div class="poap-head">
+              <strong>POAPs</strong>
+              <a class="poap-all" id="poapAll" href="https://collectors.poap.xyz/scan/0x6a202f991c4c1df079449be9847b1dac3f51854f" target="_blank" rel="noopener noreferrer">Ver colección completa</a>
+            </div>
+            <div class="poap-row" id="poapRow"></div>
+          </div>
+
+          
+            <div class="cert-collage" aria-label="Acreditaciones destacadas">
+              <div class="cert-collage-head">
+                <strong>Acreditaciones</strong>
+                <span class="meta small">rotación automática</span>
+              </div>
+              <div class="cert-grid" id="certGrid"></div>
+              <p class="meta small">70 acreditaciones</p>
+            </div>
+    
+        </div>
+      </details>
+
+      <details class="menu-section">
+        <summary class="menu-summary">3) Sobre mí</summary>
+        <div class="menu-content">
+          <p class="about-lead">
+            alemty.eth es un ecosistema Web3 nativo cuya evolución culmina en una Consultora Virtual AR, gobernada por una DAO, operada por agentes de IA, y soportada por infraestructura descentralizada.
+          </p>
+          <div class="about-block">
+            <h3>Visión</h3>
+            <p>
+              Evolucionar desde una identidad Web3 individual hacia una DAO operativa y finalmente una consultora virtual AR.
+            </p>
+          </div>
+          <div class="about-block">
+            <h3>Misión</h3>
+            <p>
+              Construir un ecosistema donde identidad, conocimiento y reputación se coordinen mediante tecnología descentralizada, priorizando libertad, consciencia y sostenibilidad.
+            </p>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="drawer-footer">
+      <p class="legal">© <span id="year">2026</span> alemty.eth · v0.13</p>
+    </div>
+  </aside>
+
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+
+  <!-- Phase Bar (abajo) -->
+  <footer class="phase-bar" id="phaseBar" role="contentinfo" aria-label="Fases">
+    <button class="phase active" data-phase="identidad" title="Identidad" aria-label="Identidad">
+      <span class="p-ico">⟁</span><span class="p-txt">ID</span>
+    </button>
+    <button class="phase" data-phase="comunidad" title="Comunidad" aria-label="Comunidad">
+      <span class="p-ico">☰</span><span class="p-txt">DAO</span>
+    </button>
+    
+<button class="phase" data-phase="token" aria-disabled="false" title="Token" aria-label="Token">
+  <span class="p-ico">◈</span><span class="p-txt">TOKEN</span>
+</button>
+
+
+    <button class="phase" data-phase="infra" disabled aria-disabled="true" title="Infra (bloqueado)">
+      <span class="p-ico">⛓</span><span class="p-txt">DEX</span>
+    </button>
+    <button class="phase" data-phase="ia" disabled aria-disabled="true" title="IA (bloqueado)">
+      <span class="p-ico">⟡</span><span class="p-txt">IA</span>
+    </button>
+    <button class="phase" data-phase="ar" disabled aria-disabled="true" title="AR (bloqueado)">
+      <span class="p-ico">⌁</span><span class="p-txt">AR</span>
+    </button>
+  </footer>
+
+  <script src="app.js" type="module"></script>
+
+  
+<div class="modal" id="topicModal" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="modal-card">
+    <div class="modal-head">
+      <strong id="topicTitle"></strong>
+      <button class="modal-close" id="topicClose" aria-label="Cerrar">Cerrar</button>
+    </div>
+    <div class="modal-body" id="topicBody"></div>
+    <div class="modal-foot">
+      <span class="meta small">v0.13 · UI lista · gobernanza interna por tema en backend</span>
+    </div>
+  </div>
+  <div class="modal-backdrop" id="topicBackdrop" aria-hidden="true"></div>
+</div>
+
+
+
+  <!-- Perfil DID (modal flotante) -->
+  <div class="modal" id="profileModal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-head">
+        <strong id="profileTitle"></strong>
+        <button class="modal-close" id="profileClose" aria-label="Cerrar">Cerrar</button>
+      </div>
+      <div class="modal-body" id="profileBody"></div>
+      <div class="modal-foot">
+        <span class="meta small">v0.13 · Perfil DID · Dharma + Karma</span>
+      </div>
+    </div>
+    <div class="modal-backdrop" id="profileBackdrop" aria-hidden="true"></div>
+  </div>
+
+
+
+<!-- Modal: Sistema de Rangos (1 post desde .txt local) -->
+<div class="modal" id="rangosModal" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="modal-card">
+    <div class="modal-head">
+      <strong id="rangosTitle">Sistema de Rangos</strong>
+      <button class="modal-close" id="rangosClose" aria-label="Cerrar">Cerrar</button>
+    </div>
+
+    <div class="modal-body" id="rangosBody"></div>
+
+    <div class="modal-foot">
+      <span class="meta small">v0.13 · Documento local · 1 post</span>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="rangosBackdrop" aria-hidden="true"></div>
+</div>
+
+
+
+
+<!-- Perfil RPG (modal flotante) -->
+<div class="modal" id="characterModal" aria-hidden="true" role="dialog" aria-modal="true">
+ <div class="modal-card">
+  <div class="modal-head">
+   <strong id="characterTitle">Perfil</strong>
+   <button class="modal-close" id="characterClose" aria-label="Cerrar">Cerrar</button>
+  </div>
+  <div class="modal-body" id="characterBody"></div>
+  <div class="modal-foot">
+   <span class="meta small">v0.13 · Personaje DID · Dharma / Karma / Aura / ALEM</span>
+  </div>
+ </div>
+ <div class="modal-backdrop" id="characterBackdrop" aria-hidden="true"></div>
+</div>
+
+</body>
+</html>
