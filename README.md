@@ -1,7 +1,7 @@
 
 # alemty.eth
 
-## Descripción General
+## Descripción General v0.13
 
 alemty.eth es un proyecto Web3 en etapa de construcción que evoluciona hacia una **organización descentralizada (DAO)** con un **producto final orientado a servicios**.
 
