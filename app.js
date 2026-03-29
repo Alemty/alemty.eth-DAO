@@ -379,7 +379,7 @@ function openCharacterModal(){
     <div class="char-sheet">
       <div class="char-card">
         <div class="char-avatar" aria-label="Avatar / Medalla">
-          <img src="${esc(leftImgSrc)}" alt="Avatar" loading="eager"/>
+          <<img id="charAvatarImg" alt="Avatar" loading="eager"/>
         </div>
         <div class="char-role">${esc(DID.role||'Miembro')}</div>
         <h3 class="char-title">${esc(s.rank)}</h3>
@@ -416,6 +416,14 @@ function openCharacterModal(){
     if(tab==='perfil'){
       
 const clamp = (v,max)=>Math.max(0,Math.min(100,Math.round((v/max)*100)));
+
+const charImg = body.querySelector('#charAvatarImg');
+if (charImg) {
+  charImg.referrerPolicy = 'no-referrer';
+  charImg.decoding = 'async';
+  charImg.loading = 'eager';
+  charImg.setAttribute('src', leftImgSrc || avatarSrc || '20260223_205715.jpg');
+}
 
 tc.innerHTML=`
   <div class="bars">
@@ -1348,23 +1356,20 @@ function setupPoapAll(){
   if(!a||!SITE?.site?.address) return;
   a.href=`https://collectors.poap.xyz/scan/${SITE.site.address}`;
 }
+
+
 function setupAvatar(){
-  const img=$('#avatarImg');
+  const img = document.getElementById('avatarImg');
   if(!img) return;
-  const localSrc=img.getAttribute('src');
-  const local=SITE?.profile?.localCandidates??[];
-  const cid=SITE?.profile?.ipfsCid??'';
-  const remote=SITE?.profile?.remoteFallback??'';
-  const c=[];
-  local.forEach(f=>c.push(f));
-  if(cid){c.push('https://ipfs.io/ipfs/'+cid);c.push('https://cloudflare-ipfs.com/ipfs/'+cid);}
-  if(remote) c.push(remote);
-  if(localSrc) c.push(localSrc);
-  let i=0;
-  const next=()=>{if(i>=c.length) return; img.referrerPolicy='no-referrer'; img.src=c[i++];};
-  img.addEventListener('error',next);
-  next();
+
+  // ÚNICA fuente: Pinata Dedicated Gateway (IPFS)
+  img.referrerPolicy = 'no-referrer';
+  img.decoding = 'async';
+  img.loading = 'eager';
+  img.src = 'https://teal-managing-reindeer-815.mypinata.cloud/ipfs/bafybeih6bodktcdu26x7m63bwsnul3daubvvey4qfkmwu3g3vy236bufqe';
 }
+
+
 function setupBuy(){
   const buy=$('#buyBtn');
   if(!buy||!SITE?.book) return;
